@@ -706,18 +706,182 @@ gitleaks detect --source .</code></pre>
   </section>
 
   <section>
+    <h2>Why Docker Security Matters</h2>
+    <p class="subtitle">Container ≠ Isolation — ขอบเขตที่โดนเปิดเผยโดยการ misconfiguration</p>
+    <br>
+    <div class="two-col" style="font-size:0.85em;">
+      <div>
+        <h3>Container ≠ VM</h3>
+        <ul>
+          <li>Container แชร์ kernel กับ host — ไม่ใช่ VM</li>
+          <li>Default: container มี full Linux capabilities</li>
+          <li>Root in container = root on host (เรื่อง kernel exploit)</li>
+          <li>Shared kernel = container escape เป็นไปได้</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Attack Surface</h3>
+        <ul>
+          <li><strong>Image layer</strong>: ไม่ pin version = อาจมี CVE ใน base image</li>
+          <li><strong>Build context</strong>: <code>COPY .</code> ดึง .git, .env เข้า image</li>
+          <li><strong>Runtime</strong>: root + no limits = DDoS + privilege escalation</li>
+          <li><strong>Network</strong>: exposed ports + no segmentation</li>
+          <li><strong>Secrets</strong>: env vars visible in <code>docker inspect</code></li>
+        </ul>
+      </div>
+    </div>
+    <br>
+    <div class="stat-box" style="text-align:center;">
+      <div class="number" style="font-size:1.4em;">84%</div>
+      <div class="label">ของ production containers มี critical/high vulnerabilities<br>(Sysdig 2024 State of Container Security Report)</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Image Security: Layers & Supply Chain</h2>
+    <br>
+    <h3>Container Image = Stack of Read-Only Layers</h3>
+    <br>
+    <pre><code>Layer 1 (base):    python:3.12-slim-bookworm     ← OS + runtime
+Layer 2 (deps):    pip install -r requirements.txt  ← Your dependencies
+Layer 3 (app):     COPY app.py /app/                 ← Your code
+Layer 4 (config):  CMD ["python", "app.py"]         ← Entrypoint</code></pre>
+    <br>
+    <h3>Common Image Vulnerabilities</h3>
+    <ul>
+      <li><span class="highlight-red">Base image มี CVE</span> — พ.ค. 2024 Alpine ถูกตรวจพบ backdoor 3 ปี</li>
+      <li><span class="highlight-red">Supply chain attack</span> — malicious package ปลอยเป็น legit library</li>
+      <li><span class="highlight-red">Stale images</span> — ไม่ rebuild นาน = CVEs สะสม</li>
+      <li><span class="highlight-yellow">Fat images</span> — เลือก <code>-slim</code> แทน full image ลด attack surface</li>
+    </ul>
+    <br>
+    <pre class="code-good"><code class="bash"># Scan image for vulnerabilities
+docker scout cve python:3.12-slim-bookworm
+
+# Pin by digest (immutable) — ไม่แปลี่ยนถ้าไม่อัปเดตระบุ
+FROM python:3.12-slim-bookworm@sha256:abc123...
+
+# Or pin by version + use SBOM
+syft python:3.12-slim-bookworm -o cyclonedx-json</code></pre>
+  </section>
+
+  <section>
+    <h2>Container Escape: What Happens When Root?</h2>
+    <br>
+    <h3>ถ้า container รันเป็น root + kernel CVE:</h3>
+    <pre><code class="bash"># Inside container (root)
+# CVE-2024-1086 (netfilter) — container escape exploit
+python3 exploit.py
+# → ได้ shell บน host machine เลย!
+
+# Attack chain:
+# 1. App vulnerability (SQLi, RCE) → code execution in container
+# 2. Container root → exploit kernel capability
+# 3. Container escape → full access to host
+# 4. Host access → pivot ไป containers/processes อื่นใน cluster</code></pre>
+    <br>
+    <h3>Defense: Drop Capabilities</h3>
+    <pre class="code-good"><code class="yaml"># docker-compose.yml
+security_opt:
+  - no-new-privileges:true     # ห้าม escalate privileges
+  - cap-drop:                 # ทิ้งทุก Linux capabilities
+    - ALL
+  - cap-add:
+    - NET_BIND_SERVICE         # เฉพาะที่จำเป็นจริง
+
+# Dockerfile
+USER appuser  # เรียบร้อย — ไม่มี root เลย</code></pre>
+    <p style="font-size:0.8em; color:#94a3b8;">Default container มี ~14 capabilities เปิดอยู่ — ส่วนใหญ่ไม่จำเป็น</p>
+  </section>
+
+  <section>
+    <h2>Secrets Management in Containers</h2>
+    <br>
+    <h3>ทำไม env vars ไม่ปลอดภัย?</h3>
+    <pre class="code-bad"><code class="bash"># ทุกคนเห็น secrets ถ้ามี access ถึง container
+$ docker inspect vulnerable-app
+# → environment section: แสดงทุก env var รวม passwords
+
+$ docker compose config
+# → แสดงทุก secret ใน compose file อ่านง่าย
+
+# ถ้า push image ไป registry:
+# → env vars อยู่ใน image layers (ใคร pull ก็เห็น)</code></pre>
+    <br>
+    <h3>Better Approaches</h3>
+    <table style="font-size:0.8em;">
+      <thead><tr><th>Method</th><th>Pros</th><th>Cons</th></tr></thead>
+      <tbody>
+        <tr><td>Docker Secrets</td><td>encrypted at rest, not in layers</td><td>Swarm only (ไม่มี K8s)</td></tr>
+        <tr><td>K8s Secrets</td><td>encrypted, RBAC, versioned</td><td>ต้องมี K8s cluster</td></tr>
+        <tr><td>Vault / AWS SM</td><td>rotation, audit, centralized</td><td>complexity, dependency</td></tr>
+        <tr><td><code>_FILE</code> suffix</td><td>ง่าย, ใช้ได้กับ secrets</td><td>ยังต้องจัดการ file permissions</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Docker Scanning Tools</h2>
+    <br>
+    <table>
+      <thead><tr><th>Tool</th><th>Scans</th><th>ใช้ใน CI/CD</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Docker Scout</strong></td>
+          <td>Image CVEs, SBOM, advice</td>
+          <td class="highlight-green">Built-in Docker CLI</td>
+        </tr>
+        <tr>
+          <td><strong>Trivy</strong></td>
+          <td>Image, filesystem, IaC, secrets</td>
+          <td class="highlight-green">Free, comprehensive</td>
+        </tr>
+        <tr>
+          <td><strong>Syft</strong></td>
+          <td>SBOM generation (CycloneDX/SPDX)</td>
+          <td class="highlight-green">Already in our lab</td>
+        </tr>
+        <tr>
+          <td><strong>Grype</strong></td>
+          <td>Vulnerabilities from SBOM</td>
+          <td class="highlight-green">Pairs with Syft</td>
+        </tr>
+        <tr>
+          <td><strong>Hadolint</strong></td>
+          <td>Dockerfile best practices</td>
+          <td class="highlight-cyan">Lint rules</td>
+        </tr>
+        <tr>
+          <td><strong>Dockle</strong></td>
+          <td>Image analysis, size, policy</td>
+          <td class="highlight-cyan">Free</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <pre class="code-good"><code class="bash"># Scan image for CVEs
+trivy image python:3.12-slim-bookworm
+
+# Scan Dockerfile for best practices
+hadolint Dockerfile
+
+# Generate SBOM + scan for vulns
+syft . -o cyclonedx-json | grype sbom:</code></pre>
+  </section>
+
+  <section>
     <h2>Dockerfile Vulnerabilities</h2>
     <br>
     <table>
-      <thead><tr><th>#</th><th>Vulnerability</th><th>Risk</th></tr></thead>
+      <thead><tr><th>#</th><th>Vulnerability</th><th>Risk</th><th>Impact</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td><code>FROM python:latest</code> — ไม่ pin version</td><td class="highlight-yellow">Medium</td></tr>
-        <tr><td>2</td><td>ไม่มี <code>USER</code> — รันเป็น root</td><td class="highlight-red">Critical</td></tr>
-        <tr><td>3</td><td><code>COPY .</code> — ไม่มี .dockerignore</td><td class="highlight-yellow">Medium</td></tr>
-        <tr><td>4</td><td>ไม่มี <code>HEALTHCHECK</code></td><td class="highlight-yellow">High</td></tr>
-        <tr><td>5</td><td><code>CMD python app.py</code> — shell form</td><td class="highlight-cyan">Low</td></tr>
-        <tr><td>6</td><td>ไม่มี multi-stage build</td><td class="highlight-yellow">Medium</td></tr>
-        <tr><td>7</td><td>ไม่มี resource limits</td><td class="highlight-yellow">High</td></tr>
+        <tr><td>1</td><td><code>FROM python:latest</code> — ไม่ pin version</td><td class="highlight-yellow">Medium</td><td>Image ไม่ reproducible, อาจมี CVE</td></tr>
+        <tr><td>2</td><td>ไม่มี <code>USER</code> — รันเป็น root</td><td class="highlight-red">Critical</td><td>Container escape → host compromise</td></tr>
+        <tr><td>3</td><td><code>COPY .</code> — ไม่มี .dockerignore</td><td class="highlight-yellow">Medium</td><td>.git, .env, secrets หลุดเข้า image</td></tr>
+        <tr><td>4</td><td>ไม่มี <code>HEALTHCHECK</code></td><td class="highlight-yellow">High</td><td>Dead container ไม่ถูก restart</td></tr>
+        <tr><td>5</td><td><code>CMD python app.py</code> — shell form</td><td class="highlight-cyan">Low</td><td>SIGTERM ไม่ถึง app, zombie processes</td></tr>
+        <tr><td>6</td><td>ไม่มี multi-stage build</td><td class="highlight-yellow">Medium</td><td>Build tools + source อยู่ใน final image</td></tr>
+        <tr><td>7</td><td>ไม่มี resource limits</td><td class="highlight-yellow">High</td><td>DDoS, crypto mining, fork bomb</td></tr>
       </tbody>
     </table>
   </section>
@@ -726,38 +890,38 @@ gitleaks detect --source .</code></pre>
     <h2>docker-compose.yml Vulnerabilities</h2>
     <br>
     <table>
-      <thead><tr><th>#</th><th>Vulnerability</th><th>Risk</th></tr></thead>
+      <thead><tr><th>#</th><th>Vulnerability</th><th>Risk</th><th>Impact</th></tr></thead>
       <tbody>
-        <tr><td>8</td><td>Secrets เป็น plaintext env vars</td><td class="highlight-red">Critical</td></tr>
-        <tr><td>9</td><td><code>ports: "5000:5000"</code> — bind all interfaces</td><td class="highlight-yellow">High</td></tr>
-        <tr><td>10</td><td>DB port 5432 exposed to host</td><td class="highlight-yellow">High</td></tr>
-        <tr><td>11</td><td>Redis ไม่มี <code>requirepass</code></td><td class="highlight-red">Critical</td></tr>
-        <tr><td>12</td><td>ไม่มี network segmentation</td><td class="highlight-yellow">High</td></tr>
-        <tr><td>13</td><td>Host volume mounts <code>./uploads:/app</code></td><td class="highlight-yellow">Medium</td></tr>
-        <tr><td>14</td><td>ไม่มี <code>no-new-privileges</code></td><td class="highlight-yellow">High</td></tr>
+        <tr><td>8</td><td>Secrets เป็น plaintext env vars</td><td class="highlight-red">Critical</td><td><code>docker inspect</code>, image layers</td></tr>
+        <tr><td>9</td><td><code>ports: "5000:5000"</code> — bind all interfaces</td><td class="highlight-yellow">High</td><td>ทุกคนบน internet เข้าถึงได้</td></tr>
+        <tr><td>10</td><td>DB port 5432 exposed to host</td><td class="highlight-yellow">High</td><td>Brute force DB, extract data</td></tr>
+        <tr><td>11</td><td>Redis ไม่มี <code>requirepass</code></td><td class="highlight-red">Critical</td><td>อ่าน/เขียน cache ได้ทุกคน</td></tr>
+        <tr><td>12</td><td>ไม่มี network segmentation</td><td class="highlight-yellow">High</td><td>compromised app → pivot to DB</td></tr>
+        <tr><td>13</td><td>Host volume mounts <code>./uploads:/app</code></td><td class="highlight-yellow">Medium</td><td>Container อ่าน/เขียน host filesystem</td></tr>
+        <tr><td>14</td><td>ไม่มี <code>no-new-privileges</code></td><td class="highlight-yellow">High</td><td>Setuid binary → privilege escalation</td></tr>
       </tbody>
     </table>
   </section>
 
   <section>
     <h2>Secure Dockerfile — Key Fixes</h2>
-    <pre class="code-good"><code class="dockerfile"># Pin version + use slim image
+    <pre class="code-good"><code class="dockerfile"># Pin version + use slim image (reduced attack surface)
 FROM python:3.12-slim-bookworm
 
-# Non-root user
+# Non-root user — container escape ยากขึ้นมาก
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-# Multi-stage build
+# Multi-stage build — final image: app code + runtime only
 FROM python:3.12-slim-bookworm AS builder
 COPY --from=builder /root/.local /home/appuser/.local
 
-# Healthcheck
+# Healthcheck — Docker รู้ว่า app ตาย แล้ว restart
 HEALTHCHECK CMD python -c "..."
 
-# Exec form
+# Exec form — PID 1 = app, SIGTERM ทำงาน
 CMD ["python", "app.py"]
 
-# Run as non-root
+# Run as non-root (ทำที่สุดท้าย!)
 USER appuser</code></pre>
   </section>
 

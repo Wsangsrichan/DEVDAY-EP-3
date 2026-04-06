@@ -306,47 +306,127 @@
 - "ตอนนี้เรามอง security ในอีกมุม — infrastructure as code"
 - "เช่นเดียวกับ code, Dockerfile และ docker-compose.yml ก็มีช่องโหว่ได้"
 - ให้เปิด `lab/vulnerable-app/Dockerfile` อ่าน
-- "มี 14 ช่องโหว่ — ทั้ง Dockerfile และ docker-compose.yml"
+- "มี 14+ ช่องโหว่ — ทั้ง Dockerfile และ docker-compose.yml"
+- **ถ้าเวลาไม่พอ**: ให้อ่านเป็น demo code review แทน hands-on — ก็ยังได้
 
 ---
 
-## Slide 34: Dockerfile Vulnerabilities
+## Slide 34: Why Docker Security Matters
 
-- อ่านตารางทีละแถว อธิบายสั้นๆ
-- เน้น "root container" และ "unpinned image" เป็น critical
+- **Container ≠ VM** — นี่คือจุดเริ่มต้น "container ปลอดภัยอยู่แล้ว" ที่หลายหลายเห็น
+- อธิบาย concept: container แชร์ kernel กับ host — ไม่ได้ isolate แบบ VM
+- "ถ้า container root exploit kernel vulnerability ได้ = ได้ shell บน host เลย"
+- **84% statistic**: อ้าง Sysdig 2024 report — "เกือบ 4 ใน 5 container ใน production มี critical/high vuln"
+- **Attack surface 4 layers**: image → build context → runtime → network → secrets
+- ถ้ามีเวลา: ให้ถาม "ใครเคยเจอ container โดน brute force หรือ DoS มั้ย?" — ส่วนใหญ่ container เป็น zero cost
+
+---
+
+## Slide 35: Image Security — Layers & Supply Chain
+
+- อธิบาย layers: base image → dependencies → app code → config
+- "ทุก layer ที่เพิ่มเข้าไปคือ attack surface เพิ่มขึ้น"
+- **Alpine backdoor (พ.ค. 2024)**: นี่คือ real case — มี malicious code ถูกแทรกเข้า xz/utils ใน Alpine 3.19 และ 3.18 นานกว่า 3 ปี
+- "สอนถาม: ใครใช้ base image อะไร? ตรวจสอบเคยว่ามี CVE แล้วหรือยัง?"
+- **Supply chain**: "npm/pip install = คุณดาวนว่าแต่ละ library ถูก compromise หรือยัง"
+- Pin by digest: อธิบายว่า `@sha256:abc123` = immutable — ถ้าไม่เปลี่ยนก็คือ image เดิม
+- Demo: `docker scout cve python:3.12-slim-bookworm` ถ้ามี Docker
+
+---
+
+## Slide 36: Container Escape — What Happens When Root?
+
+- Slide นี้สำคัญมากเพื่อสร้าง "wow factor" และทำให้เข้าใจถึงปัญหา root container
+- **Attack chain** อธิบายทีละขั้น:
+  1. App vuln (SQLi/RCE) → code execution in container
+  2. Container root → exploit kernel capability
+  3. Container escape → host shell
+  4. Host pivot → อื่น containers/processes
+- "สั้นเพียง 4 ขั้นจากการเพียง app vulnerability ก็เข้าถึง host ได้"
+- **Defense**: อธิบาย cap-drop ALL + เลือกเฉพาะที่จำเป็น
+- ถ้ามีเวลา: ให้แสดง `cap-drop` vs default capabilities — "default container มี ~14 capabilities เปิดอยู่ ส่วนใหญ่ไม่จำเป็น"
+- Non-root USER คือ defense in depth — ถ้า escape ได้ก็ยังต้องเจอ privilege escalation
+
+---
+
+## Slide 37: Secrets Management in Containers
+
+- เริ่มด้วย demo: `docker inspect` แสดง env vars — "ลองรันที่เครื่องดู จะเห็น password ทุกอัน"
+- "docker compose config ก็แสดงทุก secret ง่ายๆ"
+- "ถ้า push image ไป Docker Hub — env vars อยู่ใน image layers"
+- **เปรียบ 4 approaches**:
+  - Docker Secrets: "ดีแต่ใช้ได้แค่กับ Docker Swarm — แต่ไม่ครอบทุก case"
+  - K8s Secrets: "ดีที่สุดถ้าใช้ Kubernetes — encrypted, RBAC, versioned"
+  - Vault/AWS SM: "enterprise grade — rotation, audit, centralized แต่ซับซับ"
+  - `_FILE` suffix: "ง่ายที่สุด — ใช้ได้กับทุก platform แต่ต้องจัดการ file permissions เอง"
+- **Key point**: "ไม่ว่าจะใช้วิธีไหน — อย่าใส่ plaintext env vars ใน docker-compose.yml"
+
+---
+
+## Slide 38: Docker Scanning Tools
+
+- สรุป: "ทีมนี้เราใช้ Syft (SBOM) + Gitleaks (secrets) อยู่แล้ว ตอนนี้เพิ่ม image scanning"
+- **Trivy**: "comprehensive — scan ทั้ง image, filesystem, IaC, secrets ฟรี และครบบ" — แนะนำให้ลอง `trivy image <name>` ดู
+- **Docker Scout**: "built-in Docker CLI — ถ้า install Docker Desktop อยู่แล้วใช้ได้เลย ไม่ต้องติดตั้งอะไร"
+- **Hadolint**: "lint Dockerfile — เช่น ESLint แต่สำหรับ Dockerfile บอกว่า no-root, pinned, copy instead of add"
+- **Dockle**: "analyze image — ขนาด ใหญ่, efficient, policy check"
+- ถ้ามีเวลา: รัน `trivy image python:3.12-slim-bookworm` สดูผล — จะเห็นตัวอย่างจริง
+
+---
+
+## Slide 39: Dockerfile Vulnerabilities
+
+- อ่านตารางทีละแถว อธิบายสั้นๆ — **เพิ่ม Impact column แล้ว**
+- เน้น "root container" และ "unpinned image" เป็น critical — ให้อธิบาย impact
 - "ให้คิดว่าถ้า attacker exploit ได้ใน container — ถ้าเป็น root = game over"
+- **Impact column ให้เห็นภาพจน์ชัดเจน**: "container escape → host compromise"
 - "latest tag ไม่ reproducible — วันนี้ build กับพรุ่งนี้อาจต่างกัน"
+- Multi-stage: "build tools อยู่ใน final image = image ใหญ่ขึ้น, attack surface เพิ่ม"
 
 ---
 
-## Slide 35: docker-compose.yml Vulnerabilities
+## Slide 40: docker-compose.yml Vulnerabilities
 
-- เน้น "secrets in plaintext env vars" เป็น critical
+- เน้น "secrets in plaintext env vars" เป็น critical — ให้แสดงว่า `docker inspect` เห็นได้
 - "เห็น `DB_PASSWORD=supersecret123` ใน code — ใครก็เห็นได้"
-- "Redis ไม่มี password = ใคร connect ได้ทุกคน"
-- "DB port 5432 เปิดไว้ — คนภายน่าจะเข้า DB ไม่ได้"
-- "Network segmentation = frontend ไม่เห็น backend, backend ไม่เห็น DB"
+- "Redis ไม่มี password = ใคร connect ได้ทุกคน" → ให้อธิบายว่า Redis เปิด port 6379 ให้ใครเข้ามา ใช้ `redis-cli` ได้เลย
+- "DB port 5432 เปิดไว้ — คนภายน่าจะเข้า DB ไม่ได้" → ให้เชื่อนว่าถ้า DB ไม่ expose port ก็ยังเข้าถึงได้ผ่าน app container (แต่นี้ยังดีก)
+- "Network segmentation = frontend ไม่เห็น backend, backend ไม่เห็น DB" — ให้อธิบายด้วย diagram ง่ายๆ: frontend → backend → DB
+- Host volume mounts: "ถ้า container ถูก hack → อ่านไฟล์บน host ได้ผ่าน volume mount"
+- `no-new-privileges`: "เปรียบกับ slide container escape — หากไม่ม no-new-privileges, setuid binary ใน image สามารถ้า root exploit ได้จะยก privilege"
 
 ---
 
-## Slide 36: Secure Dockerfile — Key Fixes
+## Slide 41: Secure Dockerfile — Key Fixes
 
 - อธิบายแต่ละ fix:
   - Multi-stage: "แยก build กับ runtime — final image เล็กลง, attack surface ลดลง"
+  - **เปรียบขนาน**: "image full ประมาณ ~1GB, slim ~150MB — ลด 85% เลย"
   - Non-root: "เป็น principle พื้นฐาน — container ไม่ควรเป็น root เลย"
   - Healthcheck: "Docker รู้ว่า app ตายหรือยัง แล้ว restart ให้"
   - Exec form: "PID 1 คือ app เอง — signal ทำงานถูกต้อง"
+  - USER position: "ทำที่สุดท้าย — ถ้าต้วนหายแล้ว exec form แล้วไม่มี effect เพราะไม่ได้เป็น PID 1"
 - ให้ดู fixed version ที่ `lab/solutions/Dockerfile`
 
 ---
 
-## Slide 37: Secure docker-compose.yml — Key Fixes
+## Slide 42: Secure docker-compose.yml — Key Fixes
 
 - Secrets: "ใช้ Docker secrets แทน env vars — ไม่เห็นใน code และ inspect"
+  - "file: ./secrets/db_password.txt = อ่านจาก file, ไม่อยู่ใน compose"
+  - "ให้แต่ะ _FILE suffix — Docker จะ mount เป็น file ใน /run/secrets/"
 - Port binding: "127.0.0.1 = เข้าได้แค่จากเครื่องตัวเอง ไม่ใช่ทั้ง internet"
+  - "nginx/reverse proxy อยู่ข้างหน้า = ตั้ง proxy_pass ไป 127.0.0.1:5000"
 - Resource limits: "memory 256M — ถ้า DDoS ก็กินแค่ 256M ไม่ใช่ทั้ง server"
-- Network segmentation: "internal: true = container ใน network นี้ไม่ออก internet ได้"
-- `no-new-privileges`: "ป้องกัน container ยกระดับ privilege"
+  - "สำคัญ: ต้องจัดทั้ง service ใน compose ไม่ใช่แค่ app"
+- Network segmentation:
+  - "**frontend**: external — เปิด port ออก
+  - "**backend**: internal — เปิด port ออกได้? ไม่ต้อง เฉพาะเปิดแค่ app เอง
+  - "**db**: internal — ไม่เปิด portออกเลย ถ้าเคยใช้ Docker secrets"
+  - "internal: true = container ใน network นี้ไม่ออก internet ได้ — แม้แม้ port forward"
+- `no-new-privileges`: "ป้องกัน container ยกระดับ privilege — เพิ่มความปลอดภัยใน defense in depth"
+- read_only: "อ่านเขียนได้แค่ /tmp — ถ้า attacker ได้ write จะได้ save malware"
+- logging: "จำกว่าจำกวน log อะไร — ไม่ให้ log env vars หรือ request body ที่มี passwords"
 
 ---
 
