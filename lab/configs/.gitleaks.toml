@@ -1,0 +1,12 @@
+# Gitleaks configuration for the workshop
+# This file customizes which secrets to detect and which to ignore
+
+title = "DEVDAY EP.3 Gitleaks Config"
+
+# Allowlist for known false positives
+[allowlist]
+description = "Workshop false positives"
+paths = [
+    '''lab/solutions/.*''',
+    '''docs/.*''',
+]

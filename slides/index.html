@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEVDAY EP.3 — Security Code Review & Scanning Tools</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+<style>
+  :root {
+    --r-background-color: #0a0f0d;
+    --r-main-font: 'Inter', 'Noto Sans Thai', sans-serif;
+    --r-heading-font: 'Inter', 'Noto Sans Thai', sans-serif;
+    --r-main-color: #e2e8f0;
+    --r-heading-color: #22c55e;
+    --r-link-color: #22d3ee;
+    --r-selection-background-color: #22c55e33;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  .reveal { font-size: 28px; }
+  .reveal h1 { font-size: 2.2em; font-weight: 900; }
+  .reveal h2 { font-size: 1.6em; font-weight: 700; color: #22c55e; }
+  .reveal h3 { font-size: 1.2em; font-weight: 600; color: #22d3ee; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; }
+  .reveal pre { font-size: 0.65em; }
+  .reveal pre code { padding: 16px; border-radius: 8px; }
+  .reveal ul { text-align: left; }
+  .reveal li { margin-bottom: 0.4em; }
+  .reveal table { font-size: 0.75em; margin: 0 auto; }
+  .reveal th { background: #16a34a; color: white; padding: 8px 16px; }
+  .reveal td { padding: 6px 16px; border-bottom: 1px solid #334155; }
+  .reveal .subtitle { color: #94a3b8; font-size: 0.8em; }
+  .reveal .highlight-green { color: #22c55e; font-weight: 700; }
+  .reveal .highlight-cyan { color: #22d3ee; font-weight: 700; }
+  .reveal .highlight-red { color: #ef4444; font-weight: 700; }
+  .reveal .highlight-yellow { color: #eab308; font-weight: 700; }
+  .reveal .badge {
+    display: inline-block; padding: 4px 12px; border-radius: 4px;
+    font-size: 0.7em; font-weight: 600; text-transform: uppercase;
+  }
+  .badge-critical { background: #dc262633; color: #ef4444; border: 1px solid #ef444466; }
+  .badge-high { background: #ea580c33; color: #f97316; border: 1px solid #f9731666; }
+  .badge-medium { background: #ca8a0433; color: #eab308; border: 1px solid #eab30866; }
+  .badge-low { background: #22d3ee33; color: #22d3ee; border: 1px solid #22d3ee66; }
+  .reveal .two-col { display: flex; gap: 2em; text-align: left; }
+  .reveal .two-col > div { flex: 1; }
+  .reveal .icon { font-size: 1.4em; }
+  .reveal .stat-box {
+    background: #0f1a17; border: 1px solid #22c55e33; border-radius: 12px;
+    padding: 1.5em; margin: 0.5em; display: inline-block; min-width: 200px;
+  }
+  .reveal .stat-box .number { font-size: 2em; font-weight: 900; color: #22c55e; }
+  .reveal .stat-box .label { font-size: 0.7em; color: #94a3b8; }
+  .reveal .code-bad { border-left: 4px solid #ef4444; }
+  .reveal .code-good { border-left: 4px solid #22c55e; }
+  .slide-number { color: #475569 !important; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================ -->
+<!-- TITLE SLIDE -->
+<!-- ============================================================ -->
+<section>
+  <h1>Security Code Review<br>& Scanning Tools</h1>
+  <p class="subtitle">Hands-on Workshop | 3 Hours</p>
+  <br>
+  <p style="font-size:0.7em; color:#64748b;">DEVDAY EP.3</p>
+  <p style="font-size:0.6em; color:#475569;">Learn to find and fix security vulnerabilities<br>through manual code review and automated scanning tools</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- AGENDA -->
+<!-- ============================================================ -->
+<section>
+  <h2>Agenda</h2>
+  <table>
+    <thead><tr><th>Time</th><th>Session</th></tr></thead>
+    <tbody>
+      <tr><td>09:00 - 09:45</td><td>Security Fundamentals & OWASP Top 10</td></tr>
+      <tr><td>09:45 - 10:15</td><td>Manual Code Review + Exercise</td></tr>
+      <tr><td>10:15 - 10:25</td><td>Break</td></tr>
+      <tr><td>10:25 - 10:45</td><td>Security Scanning Tools Overview</td></tr>
+      <tr><td>10:45 - 11:35</td><td>Hands-on Lab — Security Scanning</td></tr>
+      <tr><td>11:35 - 11:55</td><td>CI/CD Integration & Best Practices</td></tr>
+      <tr><td>11:55 - 12:00</td><td>Q&A & Wrap-up</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- SESSION 1: SECURITY FUNDAMENTALS -->
+<!-- ============================================================ -->
+<section>
+  <section>
+    <h2>Session 1</h2>
+    <h1>Security Fundamentals<br>& OWASP Top 10</h1>
+    <p class="subtitle">45 minutes</p>
+  </section>
+
+  <!-- WHY SECURITY -->
+  <section>
+    <h2>Why Security Code Review?</h2>
+    <br>
+    <div style="display:flex; justify-content:center; gap:1em; flex-wrap:wrap;">
+      <div class="stat-box">
+        <div class="number">$4.45M</div>
+        <div class="label">Average cost per breach<br>(IBM 2023)</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">287 days</div>
+        <div class="label">Average time to identify<br>& contain a breach</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">85%</div>
+        <div class="label">of breaches involve<br>a human element</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHIFT LEFT -->
+  <section>
+    <h2>Shift-Left Security</h2>
+    <br>
+    <p>ยิ่งเจอช่องโหว่เร็ว ค่าใช้จ่ายในการแก้ไขยิ่งต่ำ</p>
+    <br>
+    <table>
+      <thead><tr><th>Phase</th><th>Cost to Fix</th></tr></thead>
+      <tbody>
+        <tr><td>Design</td><td class="highlight-green">1x</td></tr>
+        <tr><td>Development</td><td class="highlight-cyan">6.5x</td></tr>
+        <tr><td>Testing</td><td class="highlight-yellow">15x</td></tr>
+        <tr><td>Production</td><td class="highlight-red">100x</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- OWASP INTRO -->
+  <section>
+    <h2>OWASP Top 10 (2021)</h2>
+    <p class="subtitle">10 ความเสี่ยงด้านความปลอดภัยที่สำคัญที่สุดสำหรับ Web Applications</p>
+    <br>
+    <div class="two-col" style="font-size:0.85em;">
+      <div>
+        <p><span class="highlight-red">A01</span> Broken Access Control</p>
+        <p><span class="highlight-red">A02</span> Cryptographic Failures</p>
+        <p><span class="highlight-red">A03</span> Injection</p>
+        <p><span class="highlight-yellow">A04</span> Insecure Design</p>
+        <p><span class="highlight-yellow">A05</span> Security Misconfiguration</p>
+      </div>
+      <div>
+        <p><span class="highlight-yellow">A06</span> Vulnerable Components</p>
+        <p><span class="highlight-yellow">A07</span> Auth Failures</p>
+        <p><span class="highlight-cyan">A08</span> Integrity Failures</p>
+        <p><span class="highlight-cyan">A09</span> Logging Failures</p>
+        <p><span class="highlight-cyan">A10</span> SSRF</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- A01 -->
+  <section>
+    <h2>A01: Broken Access Control</h2>
+    <p>ผู้ใช้เข้าถึงข้อมูลหรือ function ที่ไม่ได้รับอนุญาต</p>
+    <br>
+    <div class="two-col">
+      <div>
+        <h3>ตัวอย่างช่องโหว่</h3>
+        <ul>
+          <li><strong>IDOR</strong> — เปลี่ยน <code>/api/user/123</code> เป็น <code>/api/user/456</code></li>
+          <li><strong>Privilege escalation</strong> — user เข้า admin panel</li>
+          <li><strong>Force browsing</strong> — เข้า <code>/admin</code> โดยตรง</li>
+        </ul>
+      </div>
+      <div>
+        <h3>แนวทางแก้ไข</h3>
+        <ul>
+          <li>Authorization check ทุก request</li>
+          <li>Role-Based Access Control (RBAC)</li>
+          <li>Deny by default</li>
+        </ul>
+      </div>
+    </div>
+    <br>
+    <pre class="code-bad"><code class="javascript">// Bad: ไม่มี authorization check
+app.get('/api/user/:id', (req, res) => {
+    return db.getUser(req.params.id);
+});</code></pre>
+  </section>
+
+  <!-- A02 -->
+  <section>
+    <h2>A02: Cryptographic Failures</h2>
+    <p>การเข้ารหัสที่ไม่เหมาะสม ไม่มี หรือใช้ algorithm ล้าสมัย</p>
+    <br>
+    <div class="two-col">
+      <div>
+        <h3>ตัวอย่างช่องโหว่</h3>
+        <ul>
+          <li>เก็บ password เป็น <strong>plain text</strong> หรือ MD5</li>
+          <li>ส่งข้อมูลผ่าน <strong>HTTP</strong> แทน HTTPS</li>
+          <li><strong>Hardcode</strong> encryption key ใน source</li>
+        </ul>
+      </div>
+      <div>
+        <h3>แนวทางแก้ไข</h3>
+        <ul>
+          <li><code>bcrypt</code> / <code>argon2</code> สำหรับ password</li>
+          <li>TLS สำหรับ data in transit</li>
+          <li>AES-256 สำหรับ data at rest</li>
+          <li>ไม่ hardcode keys</li>
+        </ul>
+      </div>
+    </div>
+    <br>
+    <pre class="code-bad"><code class="python"># Bad
+hash = md5(password)</code></pre>
+    <pre class="code-good"><code class="python"># Good
+hash = bcrypt.hashpw(password, bcrypt.gensalt())</code></pre>
+  </section>
+
+  <!-- A03 -->
+  <section>
+    <h2>A03: Injection</h2>
+    <p>ข้อมูล user ถูกนำไป execute โดยตรงโดยไม่ผ่าน sanitize</p>
+    <br>
+    <h3>SQL Injection</h3>
+    <pre class="code-bad"><code class="python"># Bad: string concatenation
+query = "SELECT * FROM users WHERE id = '" + user_input + "'"
+# Attacker: ' OR 1=1 -- → ได้ทั้ง database!</code></pre>
+    <pre class="code-good"><code class="python"># Good: parameterized query
+cursor.execute("SELECT * FROM users WHERE id = %s", (user_input,))</code></pre>
+    <br>
+    <h3>XSS (Cross-Site Scripting)</h3>
+    <pre class="code-bad"><code class="javascript">// Bad: render user input directly
+document.innerHTML = userInput;
+// Attacker: &lt;script&gt;steal(document.cookie)&lt;/script&gt;</code></pre>
+  </section>
+
+  <!-- A03 continued: Command Injection -->
+  <section>
+    <h2>A03: Injection (cont.)</h2>
+    <h3>Command Injection</h3>
+    <pre class="code-bad"><code class="python"># Bad: direct OS command
+os.system('ping ' + user_input)
+# Attacker: ; rm -rf / → ลบทั้ง server!</code></pre>
+    <pre class="code-good"><code class="python"># Good: use subprocess with list args
+subprocess.run(['ping', '-c', '4', validated_host], capture_output=True)</code></pre>
+    <br>
+    <h3>แนวทางป้องกัน Injection ทุกประเภท</h3>
+    <ul>
+      <li>Parameterized queries / Prepared statements</li>
+      <li>Input validation (whitelist approach)</li>
+      <li>Output encoding</li>
+      <li>ไม่เรียก OS command โดยตรง</li>
+    </ul>
+  </section>
+
+  <!-- A04 -->
+  <section>
+    <h2>A04: Insecure Design</h2>
+    <p>ปัญหาจากการออกแบบที่ไม่ปลอดภัยตั้งแต่แรก<br>ไม่สามารถแก้ได้ด้วย code fix อย่างเดียว</p>
+    <br>
+    <ul>
+      <li>ไม่มี <strong>rate limiting</strong> สำหรับ login — brute force ได้ไม่จำกัด</li>
+      <li>Forgot password ถามคำถามที่เดาได้ง่าย</li>
+      <li>ไม่มี <strong>threat modeling</strong> ก่อนเริ่ม development</li>
+    </ul>
+    <br>
+    <h3>แนวทางแก้ไข</h3>
+    <ul>
+      <li>Threat modeling ตั้งแต่ design phase</li>
+      <li>Secure design patterns</li>
+      <li>Abuse case testing</li>
+    </ul>
+  </section>
+
+  <!-- A05 -->
+  <section>
+    <h2>A05: Security Misconfiguration</h2>
+    <p>ตั้งค่าไม่ถูกต้อง ปล่อย default settings เปิด features ไม่จำเป็น</p>
+    <br>
+    <ul>
+      <li><code>DEBUG=True</code> ใน production — แสดง stack trace</li>
+      <li>Default credentials: <code>admin/admin</code></li>
+      <li>S3 bucket ตั้งเป็น public โดยไม่ตั้งใจ</li>
+      <li>Directory listing เปิดอยู่บน web server</li>
+    </ul>
+    <br>
+    <h3>แนวทางแก้ไข</h3>
+    <ul>
+      <li>Hardening checklist</li>
+      <li>Environment-specific configs</li>
+      <li>Automated config scanning</li>
+    </ul>
+  </section>
+
+  <!-- A06 -->
+  <section>
+    <h2>A06: Vulnerable & Outdated Components</h2>
+    <p>ใช้ library/framework ที่มีช่องโหว่ที่ทราบแล้ว (known CVEs)</p>
+    <br>
+    <div class="stat-box">
+      <div class="number">Log4Shell</div>
+      <div class="label">CVE-2021-44228 — RCE ใน Log4j<br>ส่งผลกระทบทั่วโลก</div>
+    </div>
+    <br><br>
+    <ul>
+      <li>jQuery เวอร์ชันเก่าที่มี XSS vulnerability</li>
+      <li>ไม่เคย update dependencies มาหลายปี</li>
+    </ul>
+    <br>
+    <h3>แนวทางแก้ไข</h3>
+    <ul>
+      <li>Regular dependency updates</li>
+      <li>ใช้ SCA tools (Syft, Snyk, Dependency-Check)</li>
+      <li>Monitor CVE alerts</li>
+    </ul>
+  </section>
+
+  <!-- A07 -->
+  <section>
+    <h2>A07: Authentication Failures</h2>
+    <p>ระบบยืนยันตัวตนที่อ่อนแอ</p>
+    <br>
+    <ul>
+      <li>อนุญาต password อ่อนแอ: <code>123456</code>, <code>password</code></li>
+      <li>ไม่มี <strong>MFA</strong> สำหรับ sensitive operations</li>
+      <li>Session ID อยู่ใน URL</li>
+      <li><strong>Credential stuffing</strong> ไม่มี rate limiting</li>
+    </ul>
+    <br>
+    <h3>แนวทางแก้ไข</h3>
+    <ul>
+      <li>Strong password policy</li>
+      <li>Multi-Factor Authentication (MFA)</li>
+      <li>Secure session management</li>
+      <li>Rate limiting + account lockout</li>
+    </ul>
+  </section>
+
+  <!-- A08 -->
+  <section>
+    <h2>A08: Software & Data Integrity Failures</h2>
+    <p>ไม่ตรวจสอบความถูกต้องของ software updates หรือ CI/CD pipeline</p>
+    <br>
+    <div class="stat-box">
+      <div class="number">SolarWinds</div>
+      <div class="label">แทรก malicious code เข้า build pipeline<br>ส่งไปถึง 18,000+ องค์กร</div>
+    </div>
+    <br><br>
+    <ul>
+      <li>Library จาก untrusted source ไม่ verify checksum</li>
+      <li>Insecure deserialization</li>
+    </ul>
+    <br>
+    <h3>แนวทางแก้ไข</h3>
+    <ul>
+      <li>Digital signatures, verify integrity</li>
+      <li>Secure CI/CD pipeline</li>
+      <li>ไม่ deserialize untrusted data</li>
+    </ul>
+  </section>
+
+  <!-- A09 -->
+  <section>
+    <h2>A09: Logging & Monitoring Failures</h2>
+    <p>ไม่มี logging เพียงพอ ตรวจจับ attack ไม่ได้</p>
+    <br>
+    <ul>
+      <li>ไม่ log failed login attempts</li>
+      <li>Log แค่เก็บไว้ ไม่มี <strong>alerting</strong></li>
+      <li>Log <strong>sensitive data</strong> เช่น passwords (ละเมิด privacy)</li>
+      <li>ไม่มี audit trail สำหรับ admin actions</li>
+    </ul>
+    <br>
+    <h3>แนวทางแก้ไข</h3>
+    <ul>
+      <li>Log security events อย่างเพียงพอ (ไม่ log sensitive data)</li>
+      <li>Centralized logging (ELK, Splunk)</li>
+      <li>Alerting + Incident response plan</li>
+    </ul>
+  </section>
+
+  <!-- A10 -->
+  <section>
+    <h2>A10: Server-Side Request Forgery (SSRF)</h2>
+    <p>Application ทำ HTTP request ไปยัง URL ที่ attacker กำหนด</p>
+    <br>
+    <pre class="code-bad"><code class="python"># Bad: server fetch URL อะไรก็ได้ที่ user ส่งมา
+resp = requests.get(user_provided_url)
+# Attacker: http://169.254.169.254 → AWS metadata/credentials!</code></pre>
+    <br>
+    <ul>
+      <li>Preview URL feature → attacker เข้าถึง internal resources</li>
+      <li>Webhook ไม่ validate URL</li>
+    </ul>
+    <br>
+    <h3>แนวทางแก้ไข</h3>
+    <ul>
+      <li>Allowlist URLs/domains</li>
+      <li>Block internal IP ranges</li>
+      <li>Network segmentation</li>
+    </ul>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- SESSION 2: MANUAL CODE REVIEW -->
+<!-- ============================================================ -->
+<section>
+  <section>
+    <h2>Session 2</h2>
+    <h1>Manual Code Review<br>Techniques</h1>
+    <p class="subtitle">30 minutes</p>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section>
+    <h2>Security Code Review Checklist</h2>
+    <br>
+    <table>
+      <thead><tr><th>Category</th><th>Check</th></tr></thead>
+      <tbody>
+        <tr><td>Input Validation</td><td>ทุก user input ต้อง validate ทั้ง type, length, format</td></tr>
+        <tr><td>Authentication</td><td>Password policy, session timeout, MFA</td></tr>
+        <tr><td>Authorization</td><td>ทุก endpoint มี auth check หรือไม่</td></tr>
+        <tr><td>Session</td><td>Secure, httpOnly, sameSite cookies</td></tr>
+        <tr><td>Cryptography</td><td>Algorithm ทันสมัย ไม่ hardcode keys</td></tr>
+        <tr><td>Error Handling</td><td>ไม่ expose stack trace ให้ user</td></tr>
+        <tr><td>Sensitive Data</td><td>ไม่เก็บ credentials ใน source code</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- EXERCISE 1 -->
+  <section>
+    <h2>Exercise 1: Manual Code Review</h2>
+    <p class="subtitle">กลุ่มละ 2-3 คน | 10 นาที</p>
+    <br>
+    <p>หาช่องโหว่ให้มากที่สุดใน sample code</p>
+    <br>
+    <p>ช่องโหว่ที่ซ่อนไว้:</p>
+    <div style="display:flex; gap:0.5em; flex-wrap:wrap; justify-content:center;">
+      <span class="badge badge-critical">SQL Injection</span>
+      <span class="badge badge-critical">XSS</span>
+      <span class="badge badge-critical">Hardcoded Password</span>
+      <span class="badge badge-high">Missing Auth</span>
+      <span class="badge badge-high">Path Traversal</span>
+      <span class="badge badge-medium">Weak Hashing</span>
+      <span class="badge badge-medium">Verbose Errors</span>
+      <span class="badge badge-low">Missing Validation</span>
+    </div>
+    <br>
+    <p style="font-size:0.7em; color:#64748b;">ใช้ checklist จากหัวข้อก่อนหน้าเป็นแนวทาง</p>
+    <p style="font-size:0.7em;">Code: <code>lab/vulnerable-app/</code></p>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- BREAK -->
+<!-- ============================================================ -->
+<section>
+  <h1>Break</h1>
+  <p class="subtitle">10 minutes | 10:15 - 10:25</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SESSION 3: SCANNING TOOLS OVERVIEW -->
+<!-- ============================================================ -->
+<section>
+  <section>
+    <h2>Session 3</h2>
+    <h1>Security Scanning<br>Tools Overview</h1>
+    <p class="subtitle">20 minutes</p>
+  </section>
+
+  <!-- TOOL CATEGORIES -->
+  <section>
+    <h2>3 Categories of Security Tools</h2>
+    <br>
+    <div class="two-col">
+      <div>
+        <h3>SAST</h3>
+        <p>Static Application Security Testing</p>
+        <p style="font-size:0.8em; color:#94a3b8;">วิเคราะห์ source code โดยไม่ต้อง run</p>
+        <p class="highlight-green">Semgrep</p>
+      </div>
+      <div>
+        <h3>SCA</h3>
+        <p>Software Composition Analysis</p>
+        <p style="font-size:0.8em; color:#94a3b8;">ตรวจสอบ dependencies ที่มีช่องโหว่</p>
+        <p class="highlight-green">Syft + Dependency-Track</p>
+      </div>
+    </div>
+    <br>
+    <div style="text-align:center;">
+      <h3>Secret Scanning</h3>
+      <p>ค้นหา credentials ที่ commit เข้า repo</p>
+      <p class="highlight-green">Gitleaks</p>
+    </div>
+  </section>
+
+  <!-- SEMGREP -->
+  <section>
+    <h2>SAST: Semgrep</h2>
+    <p>Open source, pattern-based code scanning | 30+ ภาษา</p>
+    <br>
+    <pre class="code-good"><code class="bash"># Scan with auto config
+semgrep scan --config auto .
+
+# Output JSON
+semgrep scan --config auto --json --output results.json .</code></pre>
+    <br>
+    <ul>
+      <li>Pattern-based — เข้าใจโครงสร้าง code ไม่ใช่แค่ regex</li>
+      <li>เขียน custom rules ได้ง่าย</li>
+      <li>รองรับ Python, JavaScript, Java, Go, Ruby, etc.</li>
+    </ul>
+  </section>
+
+  <!-- SYFT + DEP TRACK -->
+  <section>
+    <h2>SCA: Syft + Dependency-Track</h2>
+    <br>
+    <div class="two-col">
+      <div>
+        <h3>Syft</h3>
+        <p style="font-size:0.85em;">SBOM Generator</p>
+        <pre><code class="bash"># Generate SBOM
+syft . -o cyclonedx-json > sbom.json
+
+# Scan container
+syft &lt;image&gt; -o cyclonedx-json</code></pre>
+      </div>
+      <div>
+        <h3>Dependency-Track</h3>
+        <p style="font-size:0.85em;">Vulnerability Management</p>
+        <ul style="font-size:0.8em;">
+          <li>Import SBOM แล้ววิเคราะห์ CVEs</li>
+          <li>Dashboard risk score</li>
+          <li>Policy violations</li>
+          <li>REST API สำหรับ CI/CD</li>
+        </ul>
+      </div>
+    </div>
+    <br>
+    <h3>DefectDojo</h3>
+    <p style="font-size:0.85em;">รวมผลจาก tools ทั้งหมด (150+ importers) — deduplicate, track, report</p>
+  </section>
+
+  <!-- GITLEAKS -->
+  <section>
+    <h2>Secret Scanning: Gitleaks</h2>
+    <p>ค้นหา API keys, passwords, tokens ที่หลุดเข้า Git</p>
+    <br>
+    <pre class="code-good"><code class="bash"># Scan repo
+gitleaks detect --source . \
+  --report-format json \
+  --report-path gitleaks-report.json
+
+# Pre-commit hook (ป้องกันก่อน commit)
+gitleaks protect --staged</code></pre>
+    <br>
+    <ul>
+      <li>Scan ทั้ง Git history + uncommitted changes</li>
+      <li>ตรวจจับด้วย regex + entropy analysis</li>
+      <li>Custom rules ผ่าน <code>.gitleaks.toml</code></li>
+    </ul>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- SESSION 4: HANDS-ON LAB -->
+<!-- ============================================================ -->
+<section>
+  <section>
+    <h2>Session 4</h2>
+    <h1>Hands-on Lab<br>Security Scanning</h1>
+    <p class="subtitle">50 minutes</p>
+  </section>
+
+  <!-- LAB SETUP -->
+  <section>
+    <h2>Lab Setup</h2>
+    <pre class="code-good"><code class="bash"># Clone workshop repo
+git clone https://github.com/Wsangsrichan/DEVDAY-EP-3.git
+cd DEVDAY-EP-3/lab/vulnerable-app
+
+# Verify tools
+semgrep --version
+syft --version
+gitleaks version</code></pre>
+    <br>
+    <p>Lab checklist: <code>docs/lab-checklist.md</code></p>
+  </section>
+
+  <!-- PART A: SAST -->
+  <section>
+    <h2>Part A: SAST with Semgrep</h2>
+    <p class="subtitle">15 minutes</p>
+    <br>
+    <pre class="code-good"><code class="bash"># Step 1: Run scan
+semgrep scan --config auto --json --output results.json .
+
+# Step 2: View results
+cat results.json | python3 -m json.tool | less</code></pre>
+    <br>
+    <h3>วิเคราะห์ผลลัพธ์</h3>
+    <ul>
+      <li>จัดกลุ่มตาม severity: <span class="badge badge-critical">Critical</span> <span class="badge badge-high">High</span> <span class="badge badge-medium">Medium</span></li>
+      <li>ดู rule ID, message, file path, line number</li>
+      <li>เปรียบเทียบกับ manual review — tool พบอะไรที่พลาด?</li>
+    </ul>
+  </section>
+
+  <!-- PART B: SCA -->
+  <section>
+    <h2>Part B: SCA with Syft + Dependency-Track</h2>
+    <p class="subtitle">10 minutes</p>
+    <br>
+    <pre class="code-good"><code class="bash"># Step 1: Generate SBOM
+syft . -o cyclonedx-json > sbom.json
+
+# Step 2: View SBOM contents
+cat sbom.json | python3 -m json.tool | head -50
+
+# Step 3: Upload to Dependency-Track (Web UI or API)
+curl -X POST "http://localhost:8081/api/v1/bom" \
+  -H "X-Api-Key: YOUR_API_KEY" \
+  -F "project=PROJECT_UUID" \
+  -F "bom=@sbom.json"</code></pre>
+    <br>
+    <ul>
+      <li>ดู dashboard: vulnerabilities แบ่งตาม severity</li>
+      <li>ตรวจสอบ CVE ID, CVSS score, fixed version</li>
+    </ul>
+  </section>
+
+  <!-- PART C: SECRET -->
+  <section>
+    <h2>Part C: Secret Scanning with Gitleaks</h2>
+    <p class="subtitle">10 minutes</p>
+    <br>
+    <pre class="code-good"><code class="bash"># Step 1: Run scan
+gitleaks detect --source . \
+  --report-format json \
+  --report-path gitleaks-report.json
+
+# Step 2: View results
+cat gitleaks-report.json | python3 -m json.tool</code></pre>
+    <br>
+    <h3>วิเคราะห์ผลลัพธ์</h3>
+    <ul>
+      <li>Secret type: API key, password, token, private key</li>
+      <li>แยก true positive vs false positive</li>
+      <li>แนวทาง: ย้ายไป env vars, rotate credentials ทันที</li>
+    </ul>
+  </section>
+
+  <!-- EXERCISE 3: FIX -->
+  <section>
+    <h2>Exercise 3: Fix & Validate</h2>
+    <p class="subtitle">10 minutes</p>
+    <br>
+    <p>เลือก 3-5 critical vulnerabilities แล้วแก้ไข:</p>
+    <br>
+    <ul>
+      <li>SQL concatenation → <strong>parameterized query</strong></li>
+      <li>เพิ่ม <strong>input validation</strong> / output encoding</li>
+      <li>ลบ hardcoded secrets → <strong>env variables</strong></li>
+      <li>Update <strong>vulnerable dependencies</strong></li>
+    </ul>
+    <br>
+    <pre class="code-good"><code class="bash"># Re-scan to verify fixes
+semgrep scan --config auto .
+gitleaks detect --source .</code></pre>
+    <br>
+    <p style="font-size:0.8em; color:#94a3b8;">Solutions: <code>lab/solutions/</code></p>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- SESSION 5: CI/CD -->
+<!-- ============================================================ -->
+<section>
+  <section>
+    <h2>Session 5</h2>
+    <h1>CI/CD Integration<br>& Best Practices</h1>
+    <p class="subtitle">20 minutes</p>
+  </section>
+
+  <!-- CI/CD PIPELINE -->
+  <section>
+    <h2>Security in CI/CD Pipeline</h2>
+    <br>
+    <table>
+      <thead><tr><th>Stage</th><th>Tool</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>Pre-commit</td><td>Gitleaks</td><td>Block secrets before commit</td></tr>
+        <tr><td>Pull Request</td><td>Semgrep</td><td>SAST scan, block on Critical/High</td></tr>
+        <tr><td>Build</td><td>Syft</td><td>Generate SBOM</td></tr>
+        <tr><td>Post-build</td><td>Dependency-Track</td><td>Analyze vulnerabilities</td></tr>
+        <tr><td>Weekly</td><td>Full scan</td><td>Report to team</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- GITHUB ACTIONS EXAMPLE -->
+  <section>
+    <h2>GitHub Actions Example</h2>
+    <pre class="code-good"><code class="yaml">name: Security Scan
+on: [pull_request]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Semgrep SAST
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: auto
+
+      - name: Gitleaks Secret Scan
+        uses: gitleaks/gitleaks-action@v2
+
+      - name: Generate SBOM
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s
+          syft . -o cyclonedx-json > sbom.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json</code></pre>
+  </section>
+
+  <!-- BEST PRACTICES -->
+  <section>
+    <h2>Best Practices</h2>
+    <br>
+    <ul>
+      <li><span class="highlight-green">Scan Early, Scan Often</span> — ยิ่ง scan เร็ว ค่าแก้ยิ่งต่ำ</li>
+      <li><span class="highlight-green">Automate Everything</span> — security เป็นส่วนหนึ่งของ pipeline</li>
+      <li><span class="highlight-green">Fix Critical First</span> — จัดลำดับตาม severity</li>
+      <li><span class="highlight-green">Track Security Debt</span> — บันทึกและติดตาม issues</li>
+      <li><span class="highlight-green">Regular Updates</span> — อัพเดท dependencies สม่ำเสมอ</li>
+      <li><span class="highlight-green">Security in Every PR</span> — ทุก review มีมุมมอง security</li>
+      <li><span class="highlight-green">Security Champions</span> — มี champion ในแต่ละทีม</li>
+    </ul>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- WRAP UP -->
+<!-- ============================================================ -->
+<section>
+  <section>
+    <h2>Wrap-up</h2>
+    <br>
+    <div class="two-col">
+      <div>
+        <h3>What We Covered</h3>
+        <ul>
+          <li>OWASP Top 10</li>
+          <li>Manual code review</li>
+          <li>Semgrep (SAST)</li>
+          <li>Syft + Dependency-Track (SCA)</li>
+          <li>Gitleaks (Secrets)</li>
+          <li>CI/CD integration</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Tools Summary</h3>
+        <table style="font-size:0.75em;">
+          <tr><td>SAST</td><td class="highlight-green">Semgrep</td></tr>
+          <tr><td>SCA</td><td class="highlight-green">Syft</td></tr>
+          <tr><td>Vuln Mgmt</td><td class="highlight-green">Dependency-Track</td></tr>
+          <tr><td>Aggregator</td><td class="highlight-green">DefectDojo</td></tr>
+          <tr><td>Secrets</td><td class="highlight-green">Gitleaks</td></tr>
+          <tr><td>CI/CD</td><td class="highlight-green">GitHub Actions</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q&A -->
+  <section>
+    <h1>Q&A</h1>
+    <br>
+    <p>Resources:</p>
+    <ul style="font-size:0.8em;">
+      <li>OWASP Top 10 — <span class="highlight-cyan">owasp.org/Top10</span></li>
+      <li>Semgrep — <span class="highlight-cyan">semgrep.dev</span></li>
+      <li>Syft — <span class="highlight-cyan">github.com/anchore/syft</span></li>
+      <li>Dependency-Track — <span class="highlight-cyan">dependencytrack.org</span></li>
+      <li>Gitleaks — <span class="highlight-cyan">github.com/gitleaks/gitleaks</span></li>
+    </ul>
+    <br>
+    <p style="font-size:0.7em; color:#64748b;">Workshop materials: <span class="highlight-cyan">github.com/Wsangsrichan/DEVDAY-EP-3</span></p>
+  </section>
+
+  <!-- THANK YOU -->
+  <section>
+    <h1>Thank You!</h1>
+    <p class="subtitle">Happy Secure Coding</p>
+  </section>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: true,
+  transition: 'slide',
+  plugins: [RevealHighlight],
+  width: 1280,
+  height: 720,
+});
+</script>
+</body>
+</html>

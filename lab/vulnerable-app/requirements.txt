@@ -1,0 +1,8 @@
+# Intentionally using outdated/vulnerable versions for workshop
+Flask==2.0.1
+requests==2.25.0
+Jinja2==2.11.3
+Werkzeug==2.0.1
+urllib3==1.26.4
+cryptography==3.3.2
+PyYAML==5.3.1
