@@ -116,3 +116,27 @@ Review `Dockerfile` and `docker-compose.yml`:
 - [ ] Understood Docker secrets vs environment variables
 - [ ] Understood multi-stage build benefits
 - [ ] Understood network segmentation in compose
+
+---
+
+## Appendix B: Docker Security Scanning Checklist (Self-study)
+
+Use this checklist to review Docker security for any project:
+
+| # | Check Item | Status |
+|---|-----------|--------|
+| 1 | ใช้ minimal base image (Alpine/Distroless/slim) | [ ] |
+| 2 | ไม่ run เป็น root (มี USER instruction) | [ ] |
+| 3 | ใช้ multi-stage builds | [ ] |
+| 4 | Pin base image version (SHA256 digest) | [ ] |
+| 5 | มี .dockerignore (ไม่ COPY .git, .env, node_modules) | [ ] |
+| 6 | ไม่มี secrets hardcode ใน Dockerfile/Compose | [ ] |
+| 7 | ใช้ COPY แทน ADD | [ ] |
+| 8 | มี HEALTHCHECK | [ ] |
+| 9 | read_only: true + tmpfs สำหรับ writable dirs | [ ] |
+| 10 | cap_drop: ALL + no-new-privileges | [ ] |
+| 11 | Resource limits (CPU, memory, pids) | [ ] |
+| 12 | Network segmentation (internal networks) | [ ] |
+| 13 | Ports bind เฉพาะ localhost สำหรับ internal services | [ ] |
+| 14 | Log size limits + centralized logging | [ ] |
+| 15 | Scan image ด้วย Trivy/Syft ก่อน deploy | [ ] |

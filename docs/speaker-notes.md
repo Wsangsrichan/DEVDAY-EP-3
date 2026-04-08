@@ -2,7 +2,8 @@
 # Security Code Review & Scanning Tools
 
 > สำหรับ presenter อ่านระหว่าง present แยกออกมาเป็นไฟล์เดียว
-> Slide แต่ละอันอ้างถึงหมายเลข slide ใน presentation
+> Slide numbers เป็น approximate — Reveal.js นับ nested sections แยก
+> Total: ~54 slides across 13 horizontal positions
 
 ---
 
@@ -25,7 +26,31 @@
 
 ---
 
-## Slide 3: Session 1 Title
+## Slide 3: Course Overview
+
+- "วันนี้เราจะเรียนรู้ security scanning จริงๆ — ไม่ใช่แค่ทฤษฎี"
+- อธิบาย stat boxes: 5 sessions ครอบคลุมทั้งหมด, 3h แบบ hands-on, 4+ tools ที่จะลองใช้จริง
+- เน้นว่าเป้าหมายคือ "เมื่อเลิกไปวันนี้ คุณสามารถกลับไป scan project ของคุณเองได้ทันที"
+
+---
+
+## Slide 4: Learning Objectives
+
+- อ่านทีละข้อ ให้ผู้เรียนเห็นภาพรวม
+- เน้น 5 ข้อ นี้คือ "competencies" ที่จะได้ ไม่ใช่แค่ความรู้
+- "พอจบวันนี้ คุณจะรู้ว่ามี tools อะไร และใช้ยังไง ในการหาช่องโหว่ใน code"
+
+---
+
+## Slide 5: Prerequisites
+
+- ถาม举手 "ใครมีประสบการณ์ dev มากกว่า 1 ปี?"
+- เน้น tools ที่ต้องติดตั้งล่วงหน้า — ส่ง email แจ้ง 1 สัปดาห์ก่อน
+- "ถ้าใครยังไม่ได้ติดตั้ง หลัง break มาหาผมช่วยติดตั้ง"
+
+---
+
+## Slide 6 (~h.v 6.1): Session 1 Title
 **Security Fundamentals & OWASP Top 10 (45 min)**
 
 - "เริ่มจากพื้นฐานก่อน จะได้เข้าใจ context ของการ scan"
@@ -33,7 +58,7 @@
 
 ---
 
-## Slide 4: Why Security Code Review?
+## Slide 7 (~h.v 6.2): Why Security Code Review?
 
 - พูดจาก experience: "เคยเจอ bug ใน production ที่ scan ตั้งแต่ dev แล้วจะเจอ"
 - $4.45M — ย้ำตัวเลข ให้คนจำ "4 ล้านกว่าบาท"
@@ -42,7 +67,7 @@
 
 ---
 
-## Slide 5: Shift-Left Security
+## Slide 8 (~h.v 6.3): Shift-Left Security
 
 - อธิบาย concept: ยิ่งซ้าย (เร็ว) ยิ่งถูก
 - เปรียบเทียบต้นทุน: ตอน design แก้ฟรี ตอน production แก่ร้อยเท่า
@@ -51,7 +76,7 @@
 
 ---
 
-## Slide 6: OWASP Top 10 (2021) — Overview
+## Slide 9 (~h.v 6.4): OWASP Top 10 (2021) — Overview
 
 - อธิบายสั้นๆ ว่า OWASP คืออะไร: องค์กร nonprofit ที่จัดอันดับ web security risks
 - อัปเดตทุก 3-4 ปี (ล่าสุด 2021, 2024 กำลังจะออก)
@@ -60,7 +85,7 @@
 
 ---
 
-## Slide 7: A01: Broken Access Control
+## Slide 10 (~h.v 6.5): A01: Broken Access Control
 
 - เน้นว่าขึ้นจากอันดับ 5 → 1 เพราะพบบ่อยที่สุด
 - ให้ตัวอย่าง IDOR: "เปลี่ยน URL เลข 1 = เห็นข้อมูลคนอื่น"
@@ -69,7 +94,7 @@
 
 ---
 
-## Slide 8: A02: Cryptographic Failures
+## Slide 11 (~h.v 6.6): A02: Cryptographic Failures
 
 - MD5 คือตัวอย่าง classic — เคยใช้กัน เดี๋วันใช้ bcrypt
 - อธิบายว่า hash ≠ encrypt: hash ทางเดียว, encrypt ถอดกลับได้ด้วย key
@@ -96,7 +121,7 @@
 
 ---
 
-## Slide 11: A04: Insecure Design
+## Slide 14 (~h.v 6.9): A04: Insecure Design
 
 - เน้นว่านี่ต่างจากอันดับอื่น — แก้ด้วย code ไม่ได้ ต้องออกแบบใหม่
 - ตัวอย่าง rate limiting: "ลองนึกว่าถ้าไม่จำกัด login attempt — brute force เล่นเอง"
@@ -105,7 +130,7 @@
 
 ---
 
-## Slide 12: A05: Security Misconfiguration
+## Slide 15 (~h.v 6.10): A05: Security Misconfiguration
 
 - DEBUG=True คือตัวอย่างที่เจอบ่อยมากใน production
 - ให้เล่าเคสจริงที่เคยเจอ: "เคยเจอ stack trace ที่เปิดเผย DB credentials"
@@ -114,7 +139,7 @@
 
 ---
 
-## Slide 13: A06: Vulnerable & Outdated Components
+## Slide 16 (~h.v 6.11): A06: Vulnerable & Outdated Components
 
 - Log4Shell เป็นตัวอย่างที่ดีที่สุด — impact ทั่วโลก
 - "ถ้าไม่ update dependencies ก็เหมือนมีประตูเปิดไว้ให้ attacker"
@@ -123,7 +148,7 @@
 
 ---
 
-## Slide 14: A07: Authentication Failures
+## Slide 17 (~h.v 6.12): A07: Authentication Failures
 
 - ให้ยกมือถ้าใครในห้องเคยใช้ password '123456'
 - MFA: อธิบายว่าแม้แค่ SMS ก็ดีกว่าไม่มี
@@ -132,7 +157,7 @@
 
 ---
 
-## Slide 15: A08: Software & Data Integrity Failures
+## Slide 18 (~h.v 6.13): A08: Software & Data Integrity Failures
 
 - SolarWinds: "supply chain attack ที่ใหญ่ที่สุด — 18,000+ องค์กร"
 - อธิบายว่าไม่ใช่แค่ install library — CI/CD pipeline เองก็โดนเข้าได้
@@ -141,7 +166,7 @@
 
 ---
 
-## Slide 16: A09: Logging & Monitoring Failures
+## Slide 19 (~h.v 6.14): A09: Logging & Monitoring Failures
 
 - "ถ้าไม่ log ก็เหมือนถูกขโมยแล้วไม่รู้"
 - ให้ตัวอย่าง: ถ้า brute force แต่ไม่ log → ไม่รู้จนกว่าโดน
@@ -150,7 +175,7 @@
 
 ---
 
-## Slide 17: A10: SSRF
+## Slide 20 (~h.v 6.15): A10: SSRF
 
 - อธิบาย concept: "เว็บของเรา fetch URL ที่ user ส่งมา — ถ้าเขาส่ง internal IP ละ?"
 - AWS metadata: `169.254.169.254` — ดึง credentials ได้เลย
@@ -159,7 +184,7 @@
 
 ---
 
-## Slide 18: Session 2 Title
+## Slide 21 (~h.v 7.1): Session 2 Title
 **Manual Code Review Techniques**
 
 - "ตอนนี้เราจะลงมือหาช่องโหว่เอง ก่อนใช้ tools"
@@ -167,7 +192,7 @@
 
 ---
 
-## Slide 19: Security Code Review Checklist
+## Slide 22 (~h.v 7.2): Security Code Review Checklist
 
 - อ่าน checklist ทั้ง 7 categories ให้ฟัง
 - เน้นว่านี่คือ "minimum" — ควรรู้มากกว่านี้
@@ -175,7 +200,7 @@
 
 ---
 
-## Slide 20: Exercise 1: Manual Code Review
+## Slide 23 (~h.v 7.3): Exercise 1: Manual Code Review
 
 - **จัดกลุ่ม 2-3 คน**
 - แจก code จาก `lab/vulnerable-app/app.py`
@@ -185,14 +210,14 @@
 
 ---
 
-## Slide 21: Break
+## Slide 24 (~h.v 8): Break
 
 - "พัก 10 นาที ก่อนเข้าสู่ส่วน tools"
 - ตอนพัก: ให้ผู้เรียนเปิด laptop ตรวจสอบ tools พร้อม
 
 ---
 
-## Slide 22: Session 3 Title
+## Slide 25 (~h.v 9.1): Session 3 Title
 **Security Scanning Tools Overview**
 
 - "ตอนนี้เราจะเรียนรู้ tools ที่จะใช้ใน lab"
@@ -201,7 +226,7 @@
 
 ---
 
-## Slide 23: 3 Categories of Security Tools
+## Slide 26 (~h.v 9.2): 3 Categories of Security Tools
 
 - SAST = static (ไม่ต้อง run code)
 - SCA = dependencies (third-party libraries)
@@ -211,7 +236,7 @@
 
 ---
 
-## Slide 24: SAST: Semgrep
+## Slide 27 (~h.v 9.3): SAST: Semgrep
 
 - "Semgrep คือ tool หลักที่เราจะใช้วันนี้"
 - เน้นว่า pattern-based ไม่ใช่ regex — เข้าใจโครงสร้าง code
@@ -220,7 +245,7 @@
 
 ---
 
-## Slide 25: SCA: Syft + Dependency-Track
+## Slide 28 (~h.v 9.4): SCA: Syft + Dependency-Track
 
 - Syft: "สร้าง SBOM (Software Bill of Materials) — รายการอะไรอยู่ในเว็บ"
 - อธิบาย SBOM แบบง่ายๆ: เหมือน.ingredients list ของอาหาร
@@ -230,7 +255,7 @@
 
 ---
 
-## Slide 26: Secret Scanning: Gitleaks
+## Slide 29 (~h.v 9.5): Secret Scanning: Gitleaks
 
 - "Gitleaks คือ tool ที่ค้นหา secrets ที่ commit เข้า git โดยไม่ตั้งใจ"
 - เน้นว่า scan Git history ทั้งหมด — ไม่ใช่แค่ working directory
@@ -239,7 +264,7 @@
 
 ---
 
-## Slide 27: Session 4 Title
+## Slide 30 (~h.v 10.1): Session 4 Title
 **Hands-on Lab — Security Scanning**
 
 - "นี่คือส่วนที่สำคัญที่สุดของวันนี้"
@@ -248,7 +273,7 @@
 
 ---
 
-## Slide 28: Lab Setup
+## Slide 31 (~h.v 10.2): Lab Setup
 
 - ให้ clone repo ถ้ายังไม่ได้ clone
 - verify tools: `semgrep --version`, `syft --version`, `gitleaks version`
@@ -257,7 +282,7 @@
 
 ---
 
-## Slide 29: Part A: SAST with Semgrep
+## Slide 32 (~h.v 10.3): Part A: SAST with Semgrep
 
 - ให้รันคำสั่งตาม slide
 - อธิบาย step 1-2: "รันแล้วดู output"
@@ -268,7 +293,7 @@
 
 ---
 
-## Slide 30: Part B: SCA with Syft + Dependency-Track
+## Slide 33 (~h.v 10.4): Part B: SCA with Syft + Dependency-Track
 
 - ให้รัน `syft . -o cyclonedx-json > sbom.json`
 - "เปิด sbom.json ดู — จะเห็น dependency ทั้งหมดพร้อม version"
@@ -278,7 +303,7 @@
 
 ---
 
-## Slide 31: Part C: Secret Scanning with Gitleaks
+## Slide 34 (~h.v 10.5): Part C: Secret Scanning with Gitleaks
 
 - ให้รัน gitleaks detect
 - "ดูว่าเจอ secret อะไรบ้าง — API key, password, token"
@@ -289,7 +314,7 @@
 
 ---
 
-## Slide 32: Exercise 3: Fix & Validate
+## Slide 35 (~h.v 10.6): Exercise 3: Fix & Validate
 
 - "เลือก 3-5 critical/high vulnerabilities ที่พบ แล้วแก้ไข"
 - ให้เปิด `app.py` แล้วแก้:
@@ -301,7 +326,7 @@
 
 ---
 
-## Slide 33: Part D: Docker Security Review
+## Slide 36 (~h.v 10.7): Part D: Docker Security Review
 
 - "ตอนนี้เรามอง security ในอีกมุม — infrastructure as code"
 - "เช่นเดียวกับ code, Dockerfile และ docker-compose.yml ก็มีช่องโหว่ได้"
@@ -311,7 +336,7 @@
 
 ---
 
-## Slide 34: Why Docker Security Matters
+## Slide 37 (~h.v 10.8): Why Docker Security Matters
 
 - **Container ≠ VM** — นี่คือจุดเริ่มต้น "container ปลอดภัยอยู่แล้ว" ที่หลายหลายเห็น
 - อธิบาย concept: container แชร์ kernel กับ host — ไม่ได้ isolate แบบ VM
@@ -322,7 +347,7 @@
 
 ---
 
-## Slide 35: Image Security — Layers & Supply Chain
+## Slide 38 (~h.v 10.9): Image Security — Layers & Supply Chain
 
 - อธิบาย layers: base image → dependencies → app code → config
 - "ทุก layer ที่เพิ่มเข้าไปคือ attack surface เพิ่มขึ้น"
@@ -334,7 +359,7 @@
 
 ---
 
-## Slide 36: Container Escape — What Happens When Root?
+## Slide 39 (~h.v 10.10): Container Escape — What Happens When Root?
 
 - Slide นี้สำคัญมากเพื่อสร้าง "wow factor" และทำให้เข้าใจถึงปัญหา root container
 - **Attack chain** อธิบายทีละขั้น:
@@ -349,7 +374,7 @@
 
 ---
 
-## Slide 37: Secrets Management in Containers
+## Slide 40 (~h.v 10.11): Secrets Management in Containers
 
 - เริ่มด้วย demo: `docker inspect` แสดง env vars — "ลองรันที่เครื่องดู จะเห็น password ทุกอัน"
 - "docker compose config ก็แสดงทุก secret ง่ายๆ"
@@ -363,7 +388,7 @@
 
 ---
 
-## Slide 38: Docker Scanning Tools
+## Slide 41 (~h.v 10.12): Docker Scanning Tools
 
 - สรุป: "ทีมนี้เราใช้ Syft (SBOM) + Gitleaks (secrets) อยู่แล้ว ตอนนี้เพิ่ม image scanning"
 - **Trivy**: "comprehensive — scan ทั้ง image, filesystem, IaC, secrets ฟรี และครบบ" — แนะนำให้ลอง `trivy image <name>` ดู
@@ -374,7 +399,7 @@
 
 ---
 
-## Slide 39: Dockerfile Vulnerabilities
+## Slide 42 (~h.v 10.13): Dockerfile Vulnerabilities
 
 - อ่านตารางทีละแถว อธิบายสั้นๆ — **เพิ่ม Impact column แล้ว**
 - เน้น "root container" และ "unpinned image" เป็น critical — ให้อธิบาย impact
@@ -397,7 +422,7 @@
 
 ---
 
-## Slide 41: Secure Dockerfile — Key Fixes
+## Slide 44 (~h.v 10.15): Secure Dockerfile — Key Fixes
 
 - อธิบายแต่ละ fix:
   - Multi-stage: "แยก build กับ runtime — final image เล็กลง, attack surface ลดลง"
@@ -410,7 +435,7 @@
 
 ---
 
-## Slide 42: Secure docker-compose.yml — Key Fixes
+## Slide 45 (~h.v 10.16): Secure docker-compose.yml — Key Fixes
 
 - Secrets: "ใช้ Docker secrets แทน env vars — ไม่เห็นใน code และ inspect"
   - "file: ./secrets/db_password.txt = อ่านจาก file, ไม่อยู่ใน compose"
@@ -430,7 +455,7 @@
 
 ---
 
-## Slide 38: Session 5 Title
+## Slide 46 (~h.v 11.1): Session 5 Title
 **CI/CD Integration & Best Practices**
 
 - "ตอนนี้เรารู้จัก tools แล้ว — ถ้าใส่ pipeline จะเป็นยังไง?"
@@ -438,7 +463,7 @@
 
 ---
 
-## Slide 39: Security in CI/CD Pipeline
+## Slide 47 (~h.v 11.2): Security in CI/CD Pipeline
 
 - อธิบาย flow: pre-commit → PR → build → post-build → weekly
 - "ทุก stage มี security check"
@@ -447,7 +472,7 @@
 
 ---
 
-## Slide 40: GitHub Actions Example
+## Slide 48 (~h.v 11.3): GitHub Actions Example
 
 - อ่าน YAML ทีละ job อธิบาย
 - Semgrep action: "เพิ่มใน repo แล้วมัน scanทุก PR อัตโนมัติ"
@@ -457,7 +482,7 @@
 
 ---
 
-## Slide 41: Best Practices
+## Slide 49 (~h.v 11.4): Best Practices
 
 - อ่านทีละข้ออธิบายสั้นๆ
 - เน้น 3 ข้อแรก:
@@ -468,7 +493,7 @@
 
 ---
 
-## Slide 42: Wrap-up
+## Slide 50 (~h.v 12.1): Wrap-up
 
 - สรุปสั้นๆ: เราได้เรียนอะไรบ้างวันนี้
 - "ตอนนี้คุณมีทั้ง knowledge และ tools แล้ว ที่จะเริ่ม scan project ของคุณเอง"
@@ -476,7 +501,7 @@
 
 ---
 
-## Slide 43: Q&A
+## Slide 51 (~h.v 12.2): Q&A
 
 - เปิดรับคำถาม
 - ถ้าไม่มีคำถาม: แนะนำ resources
@@ -486,7 +511,7 @@
 
 ---
 
-## Slide 44: Thank You
+## Slide 52 (~h.v 12.3): Thank You
 
 - ขอบคุณทุกคน
 - "Happy Secure Coding!"
@@ -511,3 +536,21 @@
 - ถาม question ระหว่าง presentation: "ที่ทำงานใช้ tool อะไรกันบ้าง?"
 - ให้ผู้เรียน share experience ของตัวเอง
 - ยกมือถามสถานะการณ์: "ใครเคยเจอ breach ใน org ของคุณมั้ย?"
+
+---
+
+## Slide 53 (~h.v 13.1): Appendix Section
+
+- "ส่วนนี้เป็น bonus content สำหรับ self-study"
+- "ครอบคลุม Docker security — Dockerfile และ docker-compose.yml"
+- "ถ้าเวลาวันนี้ไม่พอ อ่านที่บ้านได้ — มีใน repo ทั้ง slides และ lab"
+- ให้ดูตัวอย่าง secure Dockerfile และ docker-compose.yml ที่ `lab/solutions/`
+
+---
+
+## Slide 54 (~h.v 13.2): Docker Security Scanning Checklist
+
+- "นี่คือ checklist ที่คุณเอาไปใช้กับ project ของคุณได้เลย"
+- เน้น items สำคัญ: non-root (2), multi-stage (3), pin version (4), cap_drop (10)
+- "ถ้าผ่าน 15 items นี้ Docker setup ของคุณจะปลอดภัยขึ้นมาก"
+- ให้ดู `lab/solutions/Dockerfile` และ `lab/solutions/docker-compose.yml` เป็น reference

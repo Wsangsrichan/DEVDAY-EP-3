@@ -88,8 +88,59 @@
       <tr><td>10:45 - 11:35</td><td>Hands-on Lab — Security Scanning</td></tr>
       <tr><td>11:35 - 11:55</td><td>CI/CD Integration & Best Practices</td></tr>
       <tr><td>11:55 - 12:00</td><td>Q&A & Wrap-up</td></tr>
+      <!-- NEW -->
+      <tr><td style="color:#eab308;">Bonus</td><td>Appendix: Security Dockerfile & Docker Compose <span class="subtitle">(Self-study)</span></td></tr>
     </tbody>
   </table>
+</section>
+
+<!-- NEW: Course Overview -->
+<section>
+  <h2>Course Overview</h2>
+  <p style="color:#94a3b8;">เรียนรู้การตรวจสอบความปลอดภัยของ source code ด้วย manual code review<br>และการใช้เครื่องมือ security scanning tools เพื่อค้นหาช่องโหว่<br>และความเสี่ยงด้านความปลอดภัย ก่อนนำ code ไป deploy จริง</p>
+  <div style="margin-top:1.5em; display:flex; gap:1em; justify-content:center; flex-wrap:wrap;">
+    <div class="stat-box"><div class="number">5</div><div class="label">Sessions</div></div>
+    <div class="stat-box"><div class="number">3h</div><div class="label">Hands-on</div></div>
+    <div class="stat-box"><div class="number">4+</div><div class="label">Tools</div></div>
+  </div>
+</section>
+
+<!-- NEW: Learning Objectives -->
+<section>
+  <h2>Learning Objectives</h2>
+  <p class="subtitle" style="margin-bottom:1em;">เมื่อจบ workshop นี้ ผู้เรียนจะสามารถ:</p>
+  <ul>
+    <li>เข้าใจหลักการ secure coding และช่องโหว่ที่พบบ่อย <span class="highlight-cyan">(OWASP Top 10)</span></li>
+    <li>ทำ manual code review เพื่อหาจุดอ่อนด้านความปลอดภัย</li>
+    <li>ใช้ security scanning tools วิเคราะห์ code อัตโนมัติ</li>
+    <li>ตีความและแก้ไขผลลัพธ์จาก security tools</li>
+    <li>บูรณาการ security scanning เข้ากับ CI/CD pipeline</li>
+  </ul>
+</section>
+
+<!-- NEW: Prerequisites -->
+<section>
+  <h2>Prerequisites</h2>
+  <div class="two-col">
+    <div>
+      <h3>Required</h3>
+      <ul>
+        <li>ประสบการณ์พัฒนา software อย่างน้อย 1 ปี</li>
+        <li>เข้าใจพื้นฐาน web application security</li>
+        <li>รู้จักใช้ Git พื้นฐาน</li>
+        <li>Laptop + internet connection</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Recommended</h3>
+      <ul>
+        <li>Git, IDE/Text editor</li>
+        <li>Docker <span class="subtitle">(optional)</span></li>
+        <li>ติดตั้ง tools ล่วงหน้า:</li>
+        <li style="font-size:0.8em;"><code>Semgrep</code>, <code>Syft</code>, <code>Gitleaks</code></li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <!-- ============================================================ -->
@@ -1068,6 +1119,7 @@ jobs:
           <tr><td>Vuln Mgmt</td><td class="highlight-green">Dependency-Track</td></tr>
           <tr><td>Aggregator</td><td class="highlight-green">DefectDojo</td></tr>
           <tr><td>Secrets</td><td class="highlight-green">Gitleaks</td></tr>
+          <tr><td>Container</td><td class="highlight-green">Trivy, Syft</td></tr>
           <tr><td>CI/CD</td><td class="highlight-green">GitHub Actions</td></tr>
         </table>
       </div>
@@ -1094,6 +1146,39 @@ jobs:
   <section>
     <h1>Thank You!</h1>
     <p class="subtitle">Happy Secure Coding</p>
+  </section>
+</section>
+
+<!-- NEW: APPENDIX: DOCKER SECURITY -->
+<section>
+  <section>
+    <h2>Appendix</h2>
+    <p class="subtitle">Security Dockerfile & Docker Compose</p>
+    <p style="color:#64748b; font-size:0.8em;">Self-study / Reference Material</p>
+  </section>
+
+  <section>
+    <h3>Docker Security Scanning Checklist</h3>
+    <table style="font-size:0.6em;">
+      <thead><tr><th>#</th><th>Check Item</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>ใช้ minimal base image (Alpine/Distroless/slim)</td></tr>
+        <tr><td>2</td><td>ไม่ run เป็น root (มี USER instruction)</td></tr>
+        <tr><td>3</td><td>ใช้ multi-stage builds</td></tr>
+        <tr><td>4</td><td>Pin base image version (SHA256 digest)</td></tr>
+        <tr><td>5</td><td>มี .dockerignore (ไม่ COPY .git, .env, node_modules)</td></tr>
+        <tr><td>6</td><td>ไม่มี secrets hardcode ใน Dockerfile/Compose</td></tr>
+        <tr><td>7</td><td>ใช้ COPY แทน ADD</td></tr>
+        <tr><td>8</td><td>มี HEALTHCHECK</td></tr>
+        <tr><td>9</td><td>read_only: true + tmpfs สำหรับ writable dirs</td></tr>
+        <tr><td>10</td><td>cap_drop: ALL + no-new-privileges</td></tr>
+        <tr><td>11</td><td>Resource limits (CPU, memory, pids)</td></tr>
+        <tr><td>12</td><td>Network segmentation (internal networks)</td></tr>
+        <tr><td>13</td><td>Ports bind เฉพาะ localhost สำหรับ internal services</td></tr>
+        <tr><td>14</td><td>Log size limits + centralized logging</td></tr>
+        <tr><td>15</td><td>Scan image ด้วย Trivy/Syft ก่อน deploy</td></tr>
+      </tbody>
+    </table>
   </section>
 </section>
 

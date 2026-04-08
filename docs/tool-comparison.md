@@ -30,6 +30,16 @@
 | detect-secrets | Yes | Yes | Plugin-based | OSS (Apache) | By Yelp |
 | GitGuardian | Yes | Yes | Built-in | Commercial | SaaS, dashboard |
 
+## Container Security
+
+| Tool | Scan Type | License | Notes |
+|------|-----------|---------|-------|
+| **Trivy** | Image, IaC, Secrets, Licenses | OSS (Apache) | Comprehensive, recommended for workshop |
+| Docker Bench | Docker host security | OSS (Apache) | CIS Docker Benchmark |
+| Hadolint | Dockerfile lint | OSS (GPL) | Best practices linting |
+| Docker Scout | Image, SBOM | OSS (Apache) | Built-in Docker CLI |
+| Dockle | Image analysis | OSS (Apache) | Policy check, efficiency |
+
 ## Recommended Combinations
 
 ### Minimal (Free, Quick Start)
