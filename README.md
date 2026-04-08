@@ -282,6 +282,7 @@ OWASP (Open Worldwide Application Security Project) จัดอันดับ 
 - Sample CI/CD configurations (GitHub Actions, GitLab CI, Jenkins)
 - Secure Dockerfile & docker-compose.yml templates
 - Docker security scanning checklist
+- Step-by-step lab instructions ([docs/lab-instructions.md](docs/lab-instructions.md))
 - Speaker notes
 
 ## Target Audience
@@ -308,3 +309,5 @@ xdg-open slides/index.html  # Linux
 cd lab/vulnerable-app
 pip install -r requirements.txt
 ```
+
+> **Lab Step-by-Step Guide**: [docs/lab-instructions.md](docs/lab-instructions.md)
