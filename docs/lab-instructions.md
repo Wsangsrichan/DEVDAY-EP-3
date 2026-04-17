@@ -1,6 +1,9 @@
 # Lab Step-by-Step Instructions
 
 > DEVDAY EP.3 — Security Code Review & Scanning Tools
+> 4-hour workshop (08:00-12:30) | Lab sessions run in **Session 4** (10:45-11:30)
+> **Session 5 (11:30-12:30)** = Dynamic Testing (JWT / File Upload / OS Command Injection)
+> CI/CD Integration content ย้ายไป **Appendix B (self-study)**
 > ทำตาม step นี้ทีละขั้นตอน จะได้ไม่พลาด
 
 ---
@@ -108,9 +111,9 @@ cd lab/vulnerable-app && python -c "import flask; print(flask.__version__)"
 
 ---
 
-## Section 2: Exercise 1 — Manual Code Review
+## Section 2: Exercise 1 — Manual Code Review (Session 2)
 
-**เวลา**: 18 min | **Objective**: หา 12 ช่องโหว่ใน `lab/vulnerable-app/app.py`
+**เวลา**: 30 min (Session 2, 09:15-10:00) | **Objective**: หา 12 ช่องโหว่ใน `lab/vulnerable-app/app.py`
 
 ### Step 2.1: เปิดไฟล์และทำความเข้าใจโครงสร้าง
 
@@ -203,9 +206,9 @@ cat lab/vulnerable-app/config.js
 
 ---
 
-## Section 3: Part A — SAST Scanning ด้วย Semgrep
+## Section 3: Part A — SAST Scanning ด้วย Semgrep (Session 4)
 
-**เวลา**: 15 min | **Objective**: ใช้ Semgrep scan หาช่องโหว่อัตโนมัติ
+**เวลา**: 12 min (Session 4, 10:45-11:30) | **Objective**: ใช้ Semgrep scan หาช่องโหว่อัตโนมัติ
 
 ### Step 3.1: รัน Semgrep Scan
 
@@ -292,9 +295,9 @@ semgrep scan --config custom-rule.yml app.py
 
 ---
 
-## Section 4: Part B — SCA ด้วย Syft (SBOM)
+## Section 4: Part B — SCA ด้วย Syft (SBOM) (Session 4)
 
-**เวลา**: 10 min | **Objective**: สร้าง Software Bill of Materials และวิเคราะห์ dependencies
+**เวลา**: 10 min (Session 4) | **Objective**: สร้าง Software Bill of Materials และวิเคราะห์ dependencies
 
 ### Step 4.1: Generate SBOM
 
@@ -364,9 +367,9 @@ syft . -o table
 
 ---
 
-## Section 5: Part C — Secret Scanning ด้วย Gitleaks
+## Section 5: Part C — Secret Scanning ด้วย Gitleaks (Session 4)
 
-**เวลา**: 10 min | **Objective**: ค้นหา secrets/API keys ที่ซ่อนอยู่ใน code
+**เวลา**: 8 min (Session 4) | **Objective**: ค้นหา secrets/API keys ที่ซ่อนอยู่ใน code
 
 ### Step 5.1: รัน Gitleaks Scan
 
@@ -449,9 +452,9 @@ EOF
 
 ---
 
-## Section 6: Exercise 3 — Fix & Validate
+## Section 6: Exercise 3 — Fix & Validate (Session 4)
 
-**เวลา**: 10 min | **Objective**: แก้ไข 3-5 ช่องโหว่แล้วรัน scan อีกครั้ม
+**เวลา**: 10 min (Session 4) | **Objective**: แก้ไข 3-5 ช่องโหว่แล้วรัน scan อีกครั้ง
 
 ### Step 6.1: แก้ SQL Injection
 
@@ -531,9 +534,11 @@ cat ../solutions/app_fixed.py
 
 ---
 
-## Section 7: Part D — Docker Security Review (Bonus)
+## Section 7: Part D — Docker Security Review (Bonus / Appendix A)
 
-**เวลา**: Self-study | **Objective**: ระบุช่องโหว่ใน Dockerfile + docker-compose.yml
+**เวลา**: Self-study / ถ้าเหลือเวลาใน Session 4 | **Objective**: ระบุช่องโหว่ใน Dockerfile + docker-compose.yml
+
+> ดู Appendix A ใน README + slides deck สำหรับเนื้อหาเต็ม
 
 ### Step 7.1: Review Dockerfile
 
@@ -658,3 +663,26 @@ trivy image python:3.9
 | **Gitleaks** | Hardcoded secrets ทุกประเภท | มี false positives |
 
 **Best Practice**: ใช้ทั้ง 4 เครื่องมือร่วมกัน + integrate เข้า CI/CD pipeline
+
+---
+
+## Session 5 (11:30-12:30): Dynamic Testing — No Lab Steps
+
+Session 5 เป็น **Dynamic Testing** (JWT / File Upload / OS Command Injection) — 3 topic × ~20 นาที
+เน้น attack patterns + mitigations ผ่าน slides + demo ไม่มี hands-on step-by-step lab ใน file นี้
+
+**Topics**:
+1. JWT Vulnerabilities — alg=none, weak secret, no expiry, algorithm confusion, missing kid validation
+2. File Upload Vulnerabilities — extension bypass, MIME spoofing, path traversal, polyglot
+3. OS Command Injection — shell metachars, argument injection, blind/time-based
+
+**Tools ที่ใช้สำหรับทดลองต่อเอง (optional)**:
+- JWT: `jwt.io` debugger, `github.com/ticarpi/jwt_tool`, `hashcat -m 16500` สำหรับ brute HS256 secret
+- File Upload: `file` command, OWASP Upload Scanner
+- OS Command Injection: `lab/vulnerable-app/app.py` (endpoint `/api/ping`) — ลองส่ง `; id` หรือ `| whoami`
+
+## Appendix B (Self-study): CI/CD Integration
+
+CI/CD Integration content ที่เดิมเป็น Session 5 → ย้ายไป **Appendix B** ใน README — อ่านเองที่บ้าน
+Reference implementation จริงดูได้จาก **ITSC MIS Use Case** ใน Session 3
+GitHub Actions / GitLab CI / Jenkins templates อยู่ใน `docs/tool-comparison.md`

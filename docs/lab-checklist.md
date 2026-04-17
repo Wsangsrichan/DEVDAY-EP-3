@@ -1,5 +1,23 @@
 # Lab Checklist & Scoring Sheet
 
+> DEVDAY EP.3 — 4-hour workshop (08:00-12:30)
+> Labs run in **Session 2** (Manual Review) + **Session 4** (Automated Scanning)
+> **Session 5** = Dynamic Testing (JWT / File Upload / OS Command Injection) — ไม่มี scoring sheet
+> **Appendix B** (CI/CD Integration) = self-study
+
+## Timeline Summary
+
+| Time | Session | Lab Activity |
+|------|---------|--------------|
+| 08:00-08:30 | Registration | — |
+| 08:30-09:15 | Session 1: OWASP + SDLC Intro | — |
+| 09:15-10:00 | Session 2: Manual Code Review | Exercise 1 |
+| 10:00-10:15 | Break | — |
+| 10:15-10:45 | Session 3: Tools Overview + ITSC MIS | — |
+| 10:45-11:30 | Session 4: Hands-on Lab | Part A/B/C + Exercise 3 + Part D (bonus) |
+| 11:30-12:30 | Session 5: Dynamic Testing | Slides + demo (no checklist) |
+| 12:30+ | Lunch | — |
+
 ## Pre-Lab Setup
 
 - [ ] Git installed
@@ -119,7 +137,7 @@ Review `Dockerfile` and `docker-compose.yml`:
 
 ---
 
-## Appendix B: Docker Security Scanning Checklist (Self-study)
+## Appendix A: Docker Security Scanning Checklist (Self-study)
 
 Use this checklist to review Docker security for any project:
 
@@ -140,3 +158,44 @@ Use this checklist to review Docker security for any project:
 | 13 | Ports bind เฉพาะ localhost สำหรับ internal services | [ ] |
 | 14 | Log size limits + centralized logging | [ ] |
 | 15 | Scan image ด้วย Trivy/Syft ก่อน deploy | [ ] |
+
+---
+
+## Session 5: Dynamic Testing — Quick Reference
+
+ไม่มี scoring sheet — Session 5 เน้น slides + demo ผ่าน 3 topic:
+
+### 5.1 JWT Vulnerabilities — Checklist หลัง workshop
+
+- [ ] Server enforce `alg` (ไม่ trust header)
+- [ ] Secret ≥ 256-bit (generate ด้วย `openssl rand -base64 32`)
+- [ ] Token มี `exp` + short expiry + refresh pattern
+- [ ] Defend algorithm confusion (RS256 ≠ HS256)
+- [ ] `kid` validation — allowlist เท่านั้น
+
+### 5.2 File Upload Vulnerabilities — Checklist หลัง workshop
+
+- [ ] Extension allowlist (ไม่ใช่ blocklist)
+- [ ] Magic-byte validation ไม่ trust Content-Type/extension
+- [ ] Store file นอก webroot
+- [ ] Randomize filename (UUID / hash)
+- [ ] ClamAV/antivirus scan ก่อน save
+- [ ] Serve จาก separate domain (user-content.*)
+
+### 5.3 OS Command Injection — Checklist หลัง workshop
+
+- [ ] ไม่มี `shell=True` / string concat เข้า subprocess
+- [ ] ใช้ arg array: `subprocess.run(['cmd', arg1, arg2])`
+- [ ] Input allowlist (regex validation)
+- [ ] `shlex.quote` ถ้าเลี่ยง shell ไม่ได้
+- [ ] Container: drop capabilities + non-root + no-new-privileges
+
+## Appendix B: CI/CD Integration (Self-study)
+
+เดิมเป็น Session 5 — ย้ายไป self-study เพราะ overlap กับ ITSC MIS use case ใน Session 3
+- [ ] Pre-commit hook (Gitleaks) ติดตั้งแล้ว
+- [ ] PR check: Semgrep SAST → block Critical/High
+- [ ] Build stage: Syft SBOM generation
+- [ ] Post-build: Dependency-Track analyze
+- [ ] Scheduled weekly full scan
+- [ ] Reference: `docs/tool-comparison.md` + GitHub Actions workflow ใน slides deck
